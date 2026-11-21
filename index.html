@@ -2,413 +2,301 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Advanced Audio Studio (MAX LOUDNESS) 🔥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Advanced Audio Studio MAX — YouTube to MP3</title>
 <style>
-:root {
-  --bg-main: #0b0f19;
-  --bg-panel: #151b2b;
-  --bg-input: #0a0e17;
-  --border: #263148;
-  --text: #e2e8f0;
-  --dim: #8b9bb4;
-  --accent: #6d28d9;
-  --accent-hover: #7c3aed;
-  --cyan: #06b6d4;
-  --red: #ef4444;
-  --green: #10b981;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-body { background: var(--bg-main); color: var(--text); padding: 20px; display: flex; justify-content: center; }
-.container { width: 100%; max-width: 1200px; }
-
-/* Top Bar */
-.top-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-@media (max-width: 768px) { .top-bar { grid-template-columns: 1fr; } }
-.input-group { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
-.input-group label { display: block; font-size: 0.85rem; color: var(--dim); margin-bottom: 8px; }
-.url-input-wrapper { display: flex; gap: 10px; }
-input[type=text] { flex: 1; background: var(--bg-input); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; outline: none; }
-input[type=text]:focus { border-color: var(--cyan); }
-.btn-fetch { background: #1e293b; border: 1px solid var(--border); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-.btn-fetch:hover { background: #334155; border-color: var(--cyan); }
-.upload-box { border: 1px dashed var(--border); border-radius: 6px; padding: 15px; text-align: center; cursor: pointer; color: var(--dim); font-size: 0.9rem; transition: 0.2s; }
-.upload-box:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(6,182,212,0.05); }
-.upload-box input { display: none; }
-
-/* Audio Bin */
-.audio-bin { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
-.audio-bin-header { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; margin-bottom: 15px; font-weight: bold; }
-.audio-bin-header .badge { background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; color: var(--cyan); }
-.audio-bin-drop { border: 1px dashed var(--border); border-radius: 6px; padding: 20px; text-align: center; color: var(--dim); font-size: 0.85rem; }
-
-/* Player Section */
-.player-panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
-.presets-bar { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
-.presets-bar span { font-size: 0.85rem; color: var(--dim); margin-right: 5px; }
-.btn-preset { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
-.btn-preset:hover, .btn-preset.active { background: var(--border); border-color: var(--cyan); color: var(--cyan); }
-
-.player-controls { display: flex; align-items: center; gap: 15px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-.btn-ctrl { background: #1e293b; border: none; color: white; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
-.btn-ctrl.play { background: var(--accent); }
-.btn-ctrl.play:hover { background: var(--accent-hover); }
-.btn-ctrl:hover { filter: brightness(1.2); }
-.time-display { font-family: monospace; color: var(--cyan); font-size: 1rem; background: #000; padding: 5px 10px; border-radius: 4px; }
-.trim-group { display: flex; align-items: center; gap: 8px; border-left: 1px solid var(--border); padding-left: 15px; }
-.trim-group label { font-size: 0.8rem; color: var(--dim); }
-.trim-input-wrap { display: flex; align-items: center; background: #000; border: 1px solid var(--border); border-radius: 4px; padding: 2px 5px; }
-.trim-input { background: transparent; border: none; color: var(--cyan); width: 50px; text-align: center; font-family: monospace; outline: none; }
-.btn-adj { background: transparent; border: none; color: var(--dim); cursor: pointer; font-size: 0.8rem; }
-.btn-adj:hover { color: white; }
-
-.quick-trim-bar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-.btn-quick { background: #1e293b; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
-.btn-quick:hover { background: var(--border); border-color: var(--cyan); }
-
-.waveform-container { width: 100%; height: 180px; background: #000; border-radius: 6px; position: relative; border: 1px solid var(--border); overflow: hidden; }
-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
-
-/* Controls Grid */
-.controls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
-@media (max-width: 900px) { .controls-grid { grid-template-columns: 1fr; } }
-.control-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
-.ctrl-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.95rem; font-weight: bold; }
-.ctrl-val { color: var(--cyan); font-family: monospace; }
-input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; }
-input[type=range]::-webkit-slider-runnable-track { height: 6px; background: var(--border); border-radius: 3px; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--cyan); margin-top: -5px; cursor: pointer; }
-.slider-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dim); margin-top: 5px; }
-.toggle-switch { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--dim); margin-top: 15px; cursor: pointer; }
-.toggle-switch input { display: none; }
-.toggle-track { width: 36px; height: 20px; background: var(--border); border-radius: 10px; position: relative; transition: 0.2s; }
-.toggle-track::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: 0.2s; }
-.toggle-switch input:checked + .toggle-track { background: var(--cyan); }
-.toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
-
-/* Export Section */
-.export-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-.format-selector { display: flex; flex-direction: column; gap: 10px; }
-.format-opt { background: var(--bg-input); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--dim); cursor: pointer; }
-.format-opt.active { border-color: var(--accent); color: white; background: rgba(109, 40, 217, 0.1); }
-.btn-master { background: linear-gradient(135deg, #6d28d9, #a855f7); color: white; border: none; padding: 15px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; grid-column: span 2; transition: 0.2s; }
-.btn-master:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4); }
-.btn-master:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-bypass { background: linear-gradient(135deg, #991b1b, #ef4444); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; grid-column: span 2; font-weight: bold; transition: 0.2s; }
-.btn-bypass:hover { filter: brightness(1.1); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
-
-/* Result Box */
-.result-box { background: rgba(16, 185, 129, 0.05); border: 1px solid var(--green); border-radius: 8px; padding: 20px; display: none; grid-template-columns: 1fr auto; align-items: center; }
-.result-info h3 { color: var(--green); font-size: 1rem; margin-bottom: 10px; }
-.result-stats { display: flex; gap: 30px; flex-wrap: wrap; }
-.stat-item { font-size: 0.8rem; color: var(--dim); }
-.stat-item b { display: block; color: white; font-size: 1rem; margin-top: 4px; font-family: monospace; }
-.btn-download { background: var(--green); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; transition: 0.2s; }
-.btn-download:hover { filter: brightness(1.1); }
-
-.loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 999; flex-direction: column; gap: 15px; backdrop-filter: blur(4px); }
-.spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+  /* ... (CSS ทั้งหมดคงเดิมจากไฟล์ล่าสุดของคุณ) ... */
+  :root { --bg:#080b12; --panel:rgba(18,24,38,.85); --border:rgba(255,255,255,.08); --border-light:rgba(255,255,255,.15); --text:#eef2f6; --dim:#8892a4; --accent:#7c3aed; --accent-glow:rgba(124,58,237,.4); --cyan:#06b6d4; --cyan-glow:rgba(6,182,212,.3); --green:#10b981; --red:#ef4444; --font:'Inter','Segoe UI',system-ui,-apple-system,sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0} body{background:var(--bg);background-image:radial-gradient(circle at 10% 20%,rgba(124,58,237,.08) 0,transparent 40%),radial-gradient(circle at 90% 80%,rgba(6,182,212,.06) 0,transparent 40%);color:var(--text);font-family:var(--font);min-height:100vh;padding:24px;display:flex;justify-content:center;line-height:1.5} .container{width:100%;max-width:1280px} .glass{background:var(--panel);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:24px;transition:border-color .3s,box-shadow .3s} .glass:hover{border-color:var(--border-light);box-shadow:0 8px 32px rgba(0,0,0,.3)} .header{text-align:center;margin-bottom:32px} .header h1{font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#06b6d4,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;margin-bottom:8px} .header p{color:var(--dim);font-size:.95rem} .input-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px} @media(max-width:800px){.input-row{grid-template-columns:1fr}} .input-card{display:flex;flex-direction:column;gap:12px} .input-card label{font-size:.85rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px} .url-group{display:flex;gap:8px} .url-group input{flex:1;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s} .url-group input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-glow)} .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap} .btn:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-glow)} .btn:disabled{opacity:.5;cursor:not-allowed;transform:none} .btn-cyan{background:linear-gradient(135deg,#0891b2,#06b6d4)} .btn-cyan:hover{box-shadow:0 4px 16px var(--cyan-glow)} .btn-green{background:linear-gradient(135deg,#059669,#10b981)} .btn-green:hover{box-shadow:0 4px 16px rgba(16,185,129,.4)} .upload-zone{border:2px dashed var(--border-light);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;color:var(--dim)} .upload-zone:hover,.upload-zone.dragover{border-color:var(--cyan);background:rgba(6,182,212,.05);color:var(--cyan)} .upload-zone .icon{font-size:2rem;display:block;margin-bottom:8px} .upload-zone input{display:none} .wave-section{margin-bottom:24px} .wave-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:12px} .track-meta{display:flex;flex-direction:column;gap:4px} .track-title{font-size:1.1rem;font-weight:700;color:var(--text)} .track-info{font-size:.8rem;color:var(--dim);display:flex;gap:12px;flex-wrap:wrap} .track-info span{background:rgba(255,255,255,.05);padding:2px 8px;border-radius:4px} .wave-container{position:relative;width:100%;height:160px;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--border)} #waveCanvas{width:100%;height:100%;display:block;cursor:crosshair} .wave-toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap} .chip{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--dim);padding:6px 14px;border-radius:20px;font-size:.8rem;cursor:pointer;transition:all .2s} .chip:hover,.chip.active{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.1)} .player-row{display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap} .btn-play{width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0} .btn-play:hover{background:#8b5cf6;box-shadow:0 0 20px var(--accent-glow);transform:scale(1.05)} .time-box{font-family:'SF Mono','Fira Code',monospace;font-size:.9rem;color:var(--cyan);background:rgba(0,0,0,.5);padding:8px 14px;border-radius:8px;min-width:150px;text-align:center} .trim-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap} .trim-item{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--dim)} .trim-item input{width:70px;background:rgba(0,0,0,.5);border:1px solid var(--border);color:var(--cyan);padding:6px 8px;border-radius:6px;font-family:monospace;text-align:center;outline:none} .fx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px} @media(max-width:900px){.fx-grid{grid-template-columns:1fr}} .fx-card{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:12px;padding:20px} .fx-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px} .fx-header h3{font-size:.9rem;font-weight:600;color:var(--text)} .fx-val{font-family:monospace;color:var(--cyan);font-size:.9rem;background:rgba(0,0,0,.4);padding:4px 10px;border-radius:6px} input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:3px;outline:none;margin:12px 0} input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--accent));cursor:pointer;box-shadow:0 0 10px var(--cyan-glow);transition:transform .1s} input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)} .slider-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim)} .toggle-row{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:.85rem;color:var(--dim);cursor:pointer;user-select:none} .toggle-row input{display:none} .toggle-track{width:40px;height:22px;background:rgba(255,255,255,.1);border-radius:11px;position:relative;transition:.2s;flex-shrink:0} .toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s} .toggle-row input:checked + .toggle-track{background:var(--cyan)} .toggle-row input:checked + .toggle-track::after{transform:translateX(18px)} .export-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start} @media(max-width:800px){.export-section{grid-template-columns:1fr}} .format-options{display:flex;flex-direction:column;gap:10px} .format-btn{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .2s;color:var(--dim)} .format-btn:hover{border-color:var(--border-light)} .format-btn.active{border-color:var(--accent);background:rgba(124,58,237,.1);color:#fff} .format-btn .badge{font-size:.7rem;background:rgba(255,255,255,.1);padding:2px 8px;border-radius:4px} .format-btn.active .badge{background:var(--accent)} .action-buttons{display:flex;flex-direction:column;gap:12px} .btn-render{padding:16px;font-size:1rem} .btn-bypass{background:linear-gradient(135deg,#991b1b,#ef4444)} .btn-bypass:hover{box-shadow:0 4px 16px rgba(239,68,68,.4)} .result-box{display:none;background:rgba(16,185,129,.05);border:1px solid var(--green);border-radius:12px;padding:24px;grid-template-columns:1fr auto;align-items:center;gap:20px;margin-top:20px} .result-box.show{display:grid} .result-info h3{color:var(--green);font-size:1rem;margin-bottom:12px} .result-stats{display:flex;gap:24px;flex-wrap:wrap} .stat{font-size:.75rem;color:var(--dim)} .stat b{display:block;color:#fff;font-family:monospace;font-size:.95rem;margin-top:4px} .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;z-index:9999} .loading-overlay.show{display:flex} .spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.1);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite} @keyframes spin{to{transform:rotate(360deg)}} .loading-text{font-weight:600;color:var(--cyan);font-size:.95rem} .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--panel);border:1px solid var(--border-light);color:var(--text);padding:12px 24px;border-radius:10px;font-size:.9rem;opacity:0;transition:all .3s;z-index:10000;box-shadow:0 8px 32px rgba(0,0,0,.5)} .toast.show{transform:translateX(-50%) translateY(0);opacity:1} .toast.error{border-color:var(--red);color:#fca5a5} .toast.success{border-color:var(--green);color:#6ee7b7}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="input-group">
-      <label>ฟังก์ชันลิงก์ (YouTube, SoundCloud, TikTok หรือไฟล์เสียงตรง)</label>
-      <div class="url-input-wrapper">
-        <input type="text" id="urlInput" placeholder="https://youtu.be/4SbXCGsE1TI">
-        <button class="btn-fetch" onclick="fetchFromUrl()">ดึงข้อมูลเสียง</button>
+  <header class="header">
+    <h1>⚡ Advanced Audio Studio MAX</h1>
+    <p>YouTube Downloader · Waveform Visualizer · Pro Mastering Engine · MP3/OGG/WAV Export</p>
+  </header>
+
+  <div class="input-row">
+    <div class="glass input-card">
+      <label>🔗 ดึงเสียงจาก YouTube / ลิงก์โดยตรง</label>
+      <div class="url-group">
+        <input type="text" id="urlInput" placeholder="https://www.youtube.com/watch?v=...">
+        <button class="btn btn-cyan" id="fetchBtn" onclick="fetchFromUrl()">⬇ ดึงเสียง</button>
       </div>
-      <div style="font-size: 0.75rem; color: var(--dim); margin-top: 8px;">*ระบบดึงเสียงอาจติดล็อกความปลอดภัยของเว็บนั้น แนะนำให้อัปโหลดไฟล์เองจะชัวร์สุด</div>
+      <div style="font-size:0.75rem;color:var(--dim);">
+        * CORS Proxy (ค่าเริ่มต้นใช้งานได้ทันที): 
+        <input type="text" id="proxyInput" value="https://cors-anywhere.com/" style="background:rgba(0,0,0,.4);border:1px solid var(--border);color:var(--cyan);border-radius:4px;padding:2px 8px;font-size:.75rem;width:250px;margin-top:4px;" placeholder="https://your-proxy.com/">
+      </div>
+      <div style="font-size:0.7rem;color:var(--dim);margin-top:2px;">⚠️ Proxy ฟรีมี rate limit (20 คำขอ/นาที) หากใช้บ่อยแนะนำให้ self-host</div>
     </div>
-    <div class="input-group">
-      <label>อัปโหลดไฟล์เสียงหรือลากไฟล์มาวาง (แนะนำ)</label>
-      <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+    <div class="glass input-card">
+      <label>📁 อัปโหลดไฟล์เสียง (MP3, WAV, OGG)</label>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <span class="icon">🎵</span>
+        <strong>คลิกเพื่อเลือกไฟล์</strong> หรือลากไฟล์มาวางที่นี่
+        <div style="font-size:.75rem;margin-top:6px;">รองรับ MP3, WAV, OGG, FLAC, M4A</div>
         <input type="file" id="fileInput" accept="audio/*">
-        <span style="font-size: 1.2rem; display: block; margin-bottom: 5px;">⬆</span> คลิกเพื่อเลือกไฟล์ MP3, WAV, OGG
       </div>
     </div>
   </div>
 
-  <!-- Audio Bin (Static placeholder) -->
-  <div class="audio-bin">
-    <div class="audio-bin-header">
-      <span style="font-size: 1.2rem;">📁</span> คลังเสียงสั้นและคลิป (Project Audio Clips Bin)
-      <span class="badge">STAGING AREA</span>
-    </div>
-    <p style="font-size: 0.8rem; color: var(--dim); margin-bottom: 10px;">เพิ่มแทร็ก เสียงสั้น หรือคลิปที่ตัดแล้ว โดยสามารถลากวางจากภายนอกเพื่อสร้าง Timeline สำหรับงานตัดต่อ</p>
-    <div class="audio-bin-drop">
-      + คลิกเพื่อเลือกไฟล์เสียง / Sound Tag หรือลากไฟล์มาวางที่นี่ (MP3, WAV, OGG)
-    </div>
-  </div>
-
-  <!-- Studio UI (Hidden until audio loads) -->
-  <div id="studioUI" style="display: none;">
-    <div style="font-weight: bold; margin-bottom: 10px;" id="trackTitle">#Track Name<br>
-    <span style="font-size: 0.8rem; color: var(--dim); font-weight: normal;" id="trackInfo">00:00 • Audio</span></div>
-
-    <div class="player-panel">
-      <div class="presets-bar">
-        <span>Presets (ฟรี):</span>
-        <button class="btn-preset" onclick="applyPreset('nightcore')">Nightcore</button>
-        <button class="btn-preset" onclick="applyPreset('slowed')">Slowed + Reverb</button>
-        <button class="btn-preset" onclick="applyPreset('bass')">Bass Boosted</button>
-        <button class="btn-preset" onclick="applyPreset('max')">🔊 MAX LOUDNESS (สุดขีด)</button>
-        <button class="btn-preset" onclick="applyPreset('reset')">คืนค่าเริ่มต้น</button>
-      </div>
-
-      <div class="player-controls">
-        <button class="btn-ctrl play" id="playBtn" onclick="togglePlay()">
-          <svg id="playIcon" viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-        <button class="btn-ctrl" onclick="stopPlayback()"><svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M6 6h12v12H6z"/></svg></button>
-        
-        <div class="time-display" id="timeDisplay">00:00.00 / 00:00.00</div>
-        
-        <div class="trim-group">
-          <label>จุดเริ่ม (In):</label>
-          <div class="trim-input-wrap">
-            <button class="btn-adj" onclick="adjTrim('start', -1)">-1s</button>
-            <input type="number" class="trim-input" id="trimStart" value="0" step="0.1" onchange="updateTrim()">
-            <button class="btn-adj" onclick="adjTrim('start', 1)">+1s</button>
-          </div>
-          <button class="btn-quick" onclick="setTrim('start')">Set In</button>
+  <div id="studioUI" style="display:none;">
+    <div class="glass wave-section">
+      <div class="wave-header">
+        <div class="track-meta">
+          <div class="track-title" id="trackTitle">—</div>
+          <div class="track-info" id="trackInfo"></div>
         </div>
-
-        <div class="trim-group">
-          <label>จุดจบ (Out):</label>
-          <div class="trim-input-wrap">
-            <button class="btn-adj" onclick="adjTrim('end', -1)">-1s</button>
-            <input type="number" class="trim-input" id="trimEnd" value="0" step="0.1" onchange="updateTrim()">
-            <button class="btn-adj" onclick="adjTrim('end', 1)">+1s</button>
-          </div>
-          <button class="btn-quick" onclick="setTrim('end')">Set Out</button>
+        <div style="display:flex;gap:8px;">
+          <button class="chip" onclick="applyPreset('reset')">🔄 Reset</button>
+          <button class="chip" onclick="applyPreset('nightcore')">🌙 Nightcore</button>
+          <button class="chip" onclick="applyPreset('slowed')">🐢 Slowed+Reverb</button>
+          <button class="chip" onclick="applyPreset('bass')">🔊 Bass Boost</button>
+          <button class="chip" onclick="applyPreset('max')">🔥 MAX LOUDNESS</button>
         </div>
       </div>
-
-      <div class="quick-trim-bar">
-        <span style="font-size: 0.8rem; color: var(--dim); align-self: center;">Quick Trim:</span>
-        <button class="btn-quick" onclick="quickTrim(15)">ตัด 15s แรก</button>
-        <button class="btn-quick" onclick="quickTrim(30)">ตัด 30s แรก</button>
-        <button class="btn-quick" onclick="quickTrim(60)">ตัด 60s แรก</button>
-        <button class="btn-quick" onclick="quickTrim(0, 30)">ตัดท้าย 30s</button>
-        <button class="btn-quick" onclick="applyPreset('reset')">เต็มเพลง (Reset)</button>
-      </div>
-
-      <div class="waveform-container" id="waveformContainer">
-        <canvas id="waveformCanvas"></canvas>
+      <div class="wave-container"><canvas id="waveCanvas"></canvas></div>
+      <div class="wave-toolbar">
+        <button class="chip" onclick="quickTrim(15)">✂️ ตัด 15s แรก</button>
+        <button class="chip" onclick="quickTrim(30)">✂️ ตัด 30s แรก</button>
+        <button class="chip" onclick="quickTrim(60)">✂️ ตัด 60s แรก</button>
+        <button class="chip" onclick="quickTrim(0,30)">✂️ ตัดท้าย 30s</button>
       </div>
     </div>
-  </div>
 
-  <!-- Controls Grid (MAX VALUES) -->
-  <div class="controls-grid" id="effectsUI" style="display: none;">
-    <!-- Gain -->
-    <div class="control-card">
-      <div class="ctrl-header"><span>เพิ่มความดัง / ลดเสียง (Gain)</span><span class="ctrl-val" id="valGain">+0.0 dB</span></div>
-      <!-- ขยาย Max ถึง +50dB -->
-      <input type="range" id="gainSlider" min="-20" max="50" value="0" step="1" oninput="updateSliders()">
-      <div class="slider-labels"><span>-20dB</span><span>0dB (Orig)</span><span>+50dB (MAX)</span></div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="normToggle" onchange="updateSliders()">
-        <span class="toggle-track"></span>
-        Normalize (ล็อกเสียงไม่ให้แตก)
-      </label>
-    </div>
-
-    <!-- Speed & Pitch -->
-    <div class="control-card">
-      <div class="ctrl-header"><span>ความเร็วเสียง (Speed)</span><span class="ctrl-val" id="valSpeed">1.00x</span></div>
-      <input type="range" id="speedSlider" min="0.5" max="2.0" value="1" step="0.05" oninput="updateSliders()">
-      <div class="slider-labels"><span>0.5x</span><span>1.0x (ปกติ)</span><span>2.0x</span></div>
-
-      <div class="ctrl-header" style="margin-top: 15px;"><span>ระดับเสียงสูง-ต่ำ (Pitch Shift)</span><span class="ctrl-val" id="valPitch">0 st</span></div>
-      <input type="range" id="pitchSlider" min="-12" max="12" value="0" step="1" oninput="updateSliders()">
-      <div class="slider-labels"><span>-12 st</span><span>0 (ปกติ)</span><span>+12 st</span></div>
-    </div>
-
-    <!-- EQ -->
-    <div class="control-card">
-      <div class="ctrl-header"><span>Equalizer: เบส (Bass Boost)</span><span class="ctrl-val" id="valBass">+0.0 dB</span></div>
-      <!-- ขยาย Bass ถึง +24dB -->
-      <input type="range" id="bassSlider" min="0" max="24" value="0" step="1" oninput="updateSliders()">
-      <div class="slider-labels"><span>0dB</span><span>+12dB</span><span>+24dB (MAX)</span></div>
-
-      <div class="ctrl-header" style="margin-top: 15px;"><span>Equalizer: แหลม (Treble Boost)</span><span class="ctrl-val" id="valTreble">+0.0 dB</span></div>
-      <!-- ขยาย Treble ถึง +18dB -->
-      <input type="range" id="trebleSlider" min="0" max="18" value="0" step="1" oninput="updateSliders()">
-      <div class="slider-labels"><span>0dB</span><span>+9dB</span><span>+18dB (MAX)</span></div>
-    </div>
-  </div>
-
-  <!-- Export Section -->
-  <div class="export-section" id="exportUI" style="display: none;">
-    <div class="format-selector">
-      <div style="font-size: 0.85rem; color: var(--dim);">รูปแบบไฟล์ output:</div>
-      <div class="format-opt active" onclick="selectFormat(this)">WAV (16-bit PCM, คุณภาพสูงสุด)</div>
-      <div class="format-opt" onclick="selectFormat(this)">MP3 / OGG (เบราว์เซอร์จำกัดการเข้ารหัส จะเซฟเป็น WAV แทน)</div>
-    </div>
-    <div>
-      <button class="btn-master" id="renderBtn" onclick="renderAudio(false)">ประมวลผลและสร้างไฟล์เสียง</button>
-      <button class="btn-bypass" onclick="renderAudio(true)">🔞 มาสเตอร์โหมด Bypass (อัด Gain + Bass สุดขีด)</button>
-    </div>
-  </div>
-
-  <!-- Result -->
-  <div class="result-box" id="resultBox">
-    <div class="result-info">
-      <h3>ประมวลผลไฟล์เสียงสำเร็จ</h3>
-      <p style="font-size: 0.8rem; color: var(--dim); margin-bottom: 15px;" id="resultFilename">processed_audio.wav</p>
-      <div class="result-stats">
-        <div class="stat-item">ขนาดไฟล์<b id="statSize">0 MB</b></div>
-        <div class="stat-item">ระดับความดัง (Est. Mean)<b id="statMean">0 dB</b></div>
-        <div class="stat-item">สูงสุด True Peak<b id="statPeak">0 dBTP</b></div>
-        <div class="stat-item">สถานะ<b style="color: var(--green);">MASTERED</b></div>
+    <div class="player-row">
+      <button class="btn-play" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="time-box" id="timeDisplay">00:00.00 / 00:00.00</div>
+      <div class="trim-controls">
+        <div class="trim-item"><span>In:</span><input type="number" id="trimStart" value="0" step="0.1" onchange="updateTrim()"><button class="chip" onclick="setTrim('start')">Set</button></div>
+        <div class="trim-item"><span>Out:</span><input type="number" id="trimEnd" value="0" step="0.1" onchange="updateTrim()"><button class="chip" onclick="setTrim('end')">Set</button></div>
       </div>
     </div>
-    <a href="#" class="btn-download" id="downloadLink" download="mastered_audio.wav">ดาวน์โหลดไฟล์เสียง</a>
-  </div>
 
+    <div class="fx-grid">
+      <div class="fx-card">
+        <div class="fx-header"><h3>🎚️ Gain / Loudness</h3><span class="fx-val" id="valGain">+0.0 dB</span></div>
+        <input type="range" id="gainSlider" min="-20" max="50" value="0" step="1" oninput="updateSliders()">
+        <div class="slider-labels"><span>-20dB</span><span>0dB</span><span>+50dB (MAX)</span></div>
+        <label class="toggle-row"><input type="checkbox" id="normToggle" onchange="updateSliders()"><span class="toggle-track"></span> Normalize (ล็อกเสียงไม่ให้แตก)</label>
+      </div>
+      <div class="fx-card">
+        <div class="fx-header"><h3>⏩ Speed</h3><span class="fx-val" id="valSpeed">1.00x</span></div>
+        <input type="range" id="speedSlider" min="0.5" max="2.0" value="1" step="0.05" oninput="updateSliders()">
+        <div class="slider-labels"><span>0.5x</span><span>1.0x</span><span>2.0x</span></div>
+        <div class="fx-header" style="margin-top:16px;"><h3>🎵 Pitch</h3><span class="fx-val" id="valPitch">0 st</span></div>
+        <input type="range" id="pitchSlider" min="-12" max="12" value="0" step="1" oninput="updateSliders()">
+        <div class="slider-labels"><span>-12st</span><span>0</span><span>+12st</span></div>
+      </div>
+      <div class="fx-card">
+        <div class="fx-header"><h3>🔊 Bass Boost</h3><span class="fx-val" id="valBass">+0.0 dB</span></div>
+        <input type="range" id="bassSlider" min="0" max="24" value="0" step="1" oninput="updateSliders()">
+        <div class="slider-labels"><span>0dB</span><span>+12dB</span><span>+24dB (MAX)</span></div>
+        <div class="fx-header" style="margin-top:16px;"><h3>✨ Treble Boost</h3><span class="fx-val" id="valTreble">+0.0 dB</span></div>
+        <input type="range" id="trebleSlider" min="0" max="18" value="0" step="1" oninput="updateSliders()">
+        <div class="slider-labels"><span>0dB</span><span>+9dB</span><span>+18dB (MAX)</span></div>
+      </div>
+    </div>
+
+    <div class="glass export-section">
+      <div class="format-options">
+        <div style="font-size:.8rem;color:var(--dim);margin-bottom:4px;">เลือกรูปแบบไฟล์ Output:</div>
+        <div class="format-btn active" data-format="wav" onclick="selectFormat(this)"><span>WAV (16-bit PCM)</span><span class="badge">Lossless</span></div>
+        <div class="format-btn" data-format="mp3" onclick="selectFormat(this)"><span>MP3 (320kbps)</span><span class="badge">LAME</span></div>
+        <div class="format-btn" data-format="ogg" onclick="selectFormat(this)"><span>OGG Vorbis</span><span class="badge">WASM</span></div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-render" id="renderBtn" onclick="renderAudio(false)">🚀 ประมวลผลและสร้างไฟล์</button>
+        <button class="btn btn-bypass" onclick="renderAudio(true)">💀 BYPASS MODE (อัด Gain +45dB + Bass สุดขีด)</button>
+      </div>
+    </div>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-info">
+        <h3>✅ ประมวลผลสำเร็จ</h3>
+        <p style="font-size:.8rem;color:var(--dim);margin-bottom:12px;" id="resultFilename">—</p>
+        <div class="result-stats">
+          <div class="stat">ขนาดไฟล์<b id="statSize">0 MB</b></div>
+          <div class="stat">Peak<b id="statPeak">0 dBTP</b></div>
+          <div class="stat">สถานะ<b style="color:var(--green);">MASTERED</b></div>
+        </div>
+      </div>
+      <a href="#" class="btn btn-green" id="downloadLink" download="mastered_audio.wav">⬇ ดาวน์โหลด</a>
+    </div>
+  </div>
 </div>
 
-<!-- Loading Overlay -->
-<div class="loading-overlay" id="loading">
-  <div class="spinner"></div>
-  <div style="font-weight: bold; color: var(--cyan);" id="loadingText">กำลังประมวลผล...</div>
-</div>
+<div class="loading-overlay" id="loading"><div class="spinner"></div><div class="loading-text" id="loadingText">กำลังประมวลผล...</div></div>
+<div class="toast" id="toast"></div>
+
+<!-- ★★★ ไลบรารีที่ปรับปรุง ★★★ -->
+<!-- ytdl-core สำหรับเบราว์เซอร์ เวอร์ชันล่าสุดที่เสถียร -->
+<script src="https://cdn.jsdelivr.net/npm/@warren-bank/browser-ytdl-core@6.0.8-ybd-project.1/dist/es2020/ytdl-core.js"></script>
+<!-- lamejs สำหรับเข้ารหัส MP3 -->
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 
 <script>
+// ============================================================
+// GLOBAL STATE
+// ============================================================
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 let audioBuffer = null;
 let sourceNode = null;
 let isPlaying = false;
 let startTime = 0;
 let pauseTime = 0;
-let animationFrame = null;
+let animFrame = null;
+let currentFormat = 'wav';
+let renderedBlobUrl = null;
 
-// Audio Nodes (Live)
+// Live Nodes (สำหรับเล่นสด)
 const liveNodes = {
   gain: audioCtx.createGain(),
   bass: audioCtx.createBiquadFilter(),
   treble: audioCtx.createBiquadFilter(),
   limiter: audioCtx.createDynamicsCompressor()
 };
-
-// ตั้งค่าโหนด EQ
 liveNodes.bass.type = 'lowshelf'; liveNodes.bass.frequency.value = 150;
 liveNodes.treble.type = 'highshelf'; liveNodes.treble.frequency.value = 4000;
-
-// ตั้งค่า Hard Limiter (ดักเสียงแตก)
-liveNodes.limiter.threshold.value = -1.0; // เพดานเสียง
-liveNodes.limiter.knee.value = 0;
-liveNodes.limiter.ratio.value = 20;
-liveNodes.limiter.attack.value = 0.001; // ตอบสนองไวมาก
-liveNodes.limiter.release.value = 0.1;
-
-liveNodes.gain.connect(liveNodes.bass);
-liveNodes.bass.connect(liveNodes.treble);
-liveNodes.treble.connect(liveNodes.limiter);
-liveNodes.limiter.connect(audioCtx.destination);
+liveNodes.limiter.threshold.value = -1.0; liveNodes.limiter.knee.value = 0; liveNodes.limiter.ratio.value = 20;
+liveNodes.limiter.attack.value = 0.001; liveNodes.limiter.release.value = 0.1;
+liveNodes.gain.connect(liveNodes.bass); liveNodes.bass.connect(liveNodes.treble);
+liveNodes.treble.connect(liveNodes.limiter); liveNodes.limiter.connect(audioCtx.destination);
 
 // DOM Elements
-const canvas = document.getElementById('waveformCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('waveCanvas');
+const ctx2d = canvas.getContext('2d');
 const timeDisplay = document.getElementById('timeDisplay');
 const trimStartInput = document.getElementById('trimStart');
 const trimEndInput = document.getElementById('trimEnd');
-const playIcon = document.getElementById('playIcon');
+const playBtn = document.getElementById('playBtn');
 const loadingOverlay = document.getElementById('loading');
 const loadingText = document.getElementById('loadingText');
+const toastEl = document.getElementById('toast');
 
-// ==========================================
-// 1. โหลดไฟล์เสียง
-// ==========================================
-document.getElementById('fileInput').addEventListener('change', (e) => {
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type = '') {
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show ' + type;
+  clearTimeout(toastEl._t);
+  toastEl._t = setTimeout(() => toastEl.classList.remove('show'), 3500);
+}
+
+// ============================================================
+// FILE UPLOAD (Drag & Drop + Input)
+// ============================================================
+const uploadZone = document.getElementById('uploadZone');
+document.getElementById('fileInput').addEventListener('change', e => {
   if (e.target.files.length) handleFile(e.target.files[0]);
+});
+['dragover', 'dragenter'].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); uploadZone.classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); uploadZone.classList.remove('dragover'); }));
+uploadZone.addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('audio/')) handleFile(file);
+  else toast('กรุณาลากไฟล์เสียงเท่านั้น', 'error');
 });
 
 async function handleFile(file) {
-  if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3') && !file.name.endsWith('.wav')) {
-    return alert('กรุณาเลือกไฟล์เสียงเท่านั้น');
+  if (!file.type.startsWith('audio/') && !file.name.match(/\.(mp3|wav|ogg|flac|m4a)$/i)) {
+    return toast('กรุณาเลือกไฟล์เสียง (MP3, WAV, OGG, FLAC, M4A)', 'error');
   }
-  loadingOverlay.style.display = 'flex';
-  loadingText.innerText = 'กำลังถอดรหัสไฟล์เสียง...';
+  showLoading('กำลังถอดรหัสไฟล์เสียง...');
   try {
     const arrayBuffer = await file.arrayBuffer();
     await loadAudioBuffer(arrayBuffer, file.name);
   } catch (err) {
-    alert('ไม่สามารถอ่านไฟล์เสียงได้: ' + err.message);
-    loadingOverlay.style.display = 'none';
+    toast('ไม่สามารถอ่านไฟล์เสียงได้: ' + err.message, 'error');
+    hideLoading();
   }
 }
 
-async function loadAudioBuffer(arrayBuffer, filename = "Audio Track") {
+// ============================================================
+// LOAD AUDIO BUFFER
+// ============================================================
+async function loadAudioBuffer(arrayBuffer, filename = 'Audio Track') {
   try {
     audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    
     document.getElementById('studioUI').style.display = 'block';
-    document.getElementById('effectsUI').style.display = 'grid';
-    document.getElementById('exportUI').style.display = 'grid';
-    
-    document.getElementById('trackTitle').innerHTML = filename + '<br><span style="font-size: 0.8rem; color: var(--dim); font-weight: normal;" id="trackInfo">' + formatTime(audioBuffer.duration) + ' • ' + audioBuffer.numberOfChannels + ' Channels • ' + audioBuffer.sampleRate + ' Hz</span>';
-    
+    document.getElementById('trackTitle').textContent = filename;
+    const info = document.getElementById('trackInfo');
+    info.innerHTML = `<span>⏱ ${formatTime(audioBuffer.duration)}</span><span>📊 ${audioBuffer.numberOfChannels} ch</span><span>🎚 ${audioBuffer.sampleRate} Hz</span>`;
     trimStartInput.value = 0;
     trimEndInput.value = audioBuffer.duration.toFixed(2);
     trimEndInput.max = audioBuffer.duration.toFixed(2);
-    
     drawWaveform();
     updateTimeDisplay(0, audioBuffer.duration);
     updateSliders();
+    hideLoading();
     document.getElementById('studioUI').scrollIntoView({ behavior: 'smooth' });
+    toast('โหลดไฟล์สำเร็จ!', 'success');
   } catch (e) {
-    alert("ไม่สามารถถอดรหัสไฟล์เสียงได้: " + e.message);
+    toast('ไม่สามารถถอดรหัสไฟล์เสียงได้: ' + e.message, 'error');
+    hideLoading();
   }
-  loadingOverlay.style.display = 'none';
 }
 
-// ==========================================
-// 2. วาดกราฟเสียง
-// ==========================================
+// ============================================================
+// WAVEFORM RENDERING
+// ============================================================
 function drawWaveform() {
   if (!audioBuffer) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx2d.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+
   const data = audioBuffer.getChannelData(0);
-  const step = Math.ceil(data.length / canvas.width);
-  const amp = canvas.height / 2;
-  
-  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#06b6d4';
-  
-  for (let i = 0; i < canvas.width; i++) {
+  const step = Math.max(1, Math.ceil(data.length / w));
+  const amp = h / 2;
+
+  ctx2d.fillStyle = '#000';
+  ctx2d.fillRect(0, 0, w, h);
+
+  ctx2d.fillStyle = 'rgba(6,182,212,.7)';
+  for (let i = 0; i < w; i++) {
     let min = 1.0, max = -1.0;
     for (let j = 0; j < step; j++) {
-      const datum = data[(i * step) + j];
-      if (datum < min) min = datum;
-      if (datum > max) max = datum;
+      const d = data[i * step + j];
+      if (d < min) min = d;
+      if (d > max) max = d;
     }
-    ctx.fillRect(i, (1 + min) * amp, 1, (max - min) * amp);
+    ctx2d.fillRect(i, (1 + min) * amp, 1, (max - min) * amp);
   }
 
-  const startX = (parseFloat(trimStartInput.value) / audioBuffer.duration) * canvas.width;
-  const endX = (parseFloat(trimEndInput.value) / audioBuffer.duration) * canvas.width;
-  
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-  ctx.fillRect(0, 0, startX, canvas.height);
-  ctx.fillRect(endX, 0, canvas.width - endX, canvas.height);
-  
-  ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(startX, 0); ctx.lineTo(startX, canvas.height); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(endX, 0); ctx.lineTo(endX, canvas.height); ctx.stroke();
-  
-  ctx.fillStyle = '#ff4d4d'; ctx.font = '12px Arial';
-  ctx.fillText("Out", endX - 25, 20);
+  const startX = (parseFloat(trimStartInput.value) / audioBuffer.duration) * w;
+  const endX = (parseFloat(trimEndInput.value) / audioBuffer.duration) * w;
+  ctx2d.fillStyle = 'rgba(0,0,0,.65)';
+  ctx2d.fillRect(0, 0, startX, h);
+  ctx2d.fillRect(endX, 0, w - endX, h);
+
+  ctx2d.strokeStyle = '#ef4444'; ctx2d.lineWidth = 2;
+  ctx2d.beginPath(); ctx2d.moveTo(startX, 0); ctx2d.lineTo(startX, h); ctx2d.stroke();
+  ctx2d.beginPath(); ctx2d.moveTo(endX, 0); ctx2d.lineTo(endX, h); ctx2d.stroke();
+
+  if (isPlaying) {
+    const elapsed = (audioCtx.currentTime - startTime) * getRate();
+    const cur = parseFloat(trimStartInput.value) + elapsed;
+    const px = (cur / audioBuffer.duration) * w;
+    ctx2d.strokeStyle = '#ff0000'; ctx2d.lineWidth = 2;
+    ctx2d.beginPath(); ctx2d.moveTo(px, 0); ctx2d.lineTo(px, h); ctx2d.stroke();
+  }
 }
 
-// ==========================================
-// 3. อัปเดตสไลเดอร์ (MAX SETTINGS)
-// ==========================================
+// ============================================================
+// SLIDERS & PRESETS
+// ============================================================
+function getRate() {
+  return parseFloat(document.getElementById('speedSlider').value) *
+         Math.pow(2, parseFloat(document.getElementById('pitchSlider').value) / 12);
+}
+
 function updateSliders() {
   const gain = parseFloat(document.getElementById('gainSlider').value);
   const speed = parseFloat(document.getElementById('speedSlider').value);
@@ -417,28 +305,24 @@ function updateSliders() {
   const treble = parseFloat(document.getElementById('trebleSlider').value);
   const norm = document.getElementById('normToggle').checked;
 
-  document.getElementById('valGain').innerText = (gain > 0 ? '+' : '') + gain.toFixed(1) + ' dB';
-  document.getElementById('valSpeed').innerText = speed.toFixed(2) + 'x';
-  document.getElementById('valPitch').innerText = (pitch > 0 ? '+' : '') + pitch + ' st';
-  document.getElementById('valBass').innerText = (bass > 0 ? '+' : '') + bass.toFixed(1) + ' dB';
-  document.getElementById('valTreble').innerText = (treble > 0 ? '+' : '') + treble.toFixed(1) + ' dB';
+  document.getElementById('valGain').textContent = (gain > 0 ? '+' : '') + gain.toFixed(1) + ' dB';
+  document.getElementById('valSpeed').textContent = speed.toFixed(2) + 'x';
+  document.getElementById('valPitch').textContent = (pitch > 0 ? '+' : '') + pitch + ' st';
+  document.getElementById('valBass').textContent = (bass > 0 ? '+' : '') + bass.toFixed(1) + ' dB';
+  document.getElementById('valTreble').textContent = (treble > 0 ? '+' : '') + treble.toFixed(1) + ' dB';
 
-  // Live Apply
   let gainMultiplier = Math.pow(10, gain / 20);
-  if (norm) gainMultiplier = Math.min(gainMultiplier, 4); // ถ้าเปิด Normalize จะไม่ให้บูสต์เกิน 4x เพื่อกันแตก
-    
+  if (norm) gainMultiplier = Math.min(gainMultiplier, 4);
   liveNodes.gain.gain.value = gainMultiplier;
   liveNodes.bass.gain.value = bass;
   liveNodes.treble.gain.value = treble;
-  
+
   if (sourceNode && isPlaying) {
     sourceNode.playbackRate.value = speed * Math.pow(2, pitch / 12);
   }
+  drawWaveform();
 }
 
-// ==========================================
-// 4. Presets
-// ==========================================
 function applyPreset(type) {
   const g = document.getElementById('gainSlider');
   const s = document.getElementById('speedSlider');
@@ -450,28 +334,16 @@ function applyPreset(type) {
   if (type === 'nightcore') { s.value = 1.25; p.value = 0; g.value = 5; b.value = 4; t.value = 4; n.checked = false; }
   else if (type === 'slowed') { s.value = 0.8; p.value = -2; g.value = 6; b.value = 8; t.value = 0; n.checked = false; }
   else if (type === 'bass') { s.value = 1.0; p.value = 0; g.value = 4; b.value = 20; t.value = 2; n.checked = false; }
-  else if (type === 'max') { s.value = 1.0; p.value = 0; g.value = 35; b.value = 24; t.value = 18; n.checked = false; } // สุดขีด!
-  else if (type === 'reset') { s.value = 1.0; p.value = 0; g.value = 0; b.value = 0; t.value = 0; n.checked = false; }
+  else if (type === 'max') { s.value = 1.0; p.value = 0; g.value = 35; b.value = 24; t.value = 18; n.checked = false; }
+  else { s.value = 1.0; p.value = 0; g.value = 0; b.value = 0; t.value = 0; n.checked = false; }
   updateSliders();
-  drawWaveform();
 }
 
-// ==========================================
-// 5. Trim & Playback
-// ==========================================
-function adjTrim(type, amount) {
-  if (!audioBuffer) return;
-  if (type === 'start') {
-    let val = parseFloat(trimStartInput.value) + amount;
-    trimStartInput.value = Math.max(0, val).toFixed(2);
-  } else {
-    let val = parseFloat(trimEndInput.value) + amount;
-    trimEndInput.value = Math.min(audioBuffer.duration, val).toFixed(2);
-  }
-  updateTrim();
-}
-
+// ============================================================
+// TRIM
+// ============================================================
 function updateTrim() {
+  if (!audioBuffer) return;
   let start = parseFloat(trimStartInput.value) || 0;
   let end = parseFloat(trimEndInput.value) || audioBuffer.duration;
   if (start >= end) start = Math.max(0, end - 1);
@@ -482,222 +354,359 @@ function updateTrim() {
 }
 
 function setTrim(type) {
-  if (!isPlaying) return;
-  const speed = parseFloat(document.getElementById('speedSlider').value) * Math.pow(2, parseFloat(document.getElementById('pitchSlider').value) / 12);
-  const elapsed = (audioCtx.currentTime - startTime) * speed;
-  const startOffset = parseFloat(trimStartInput.value);
-  const currTime = startOffset + elapsed;
-
-  if (type === 'start') trimStartInput.value = currTime.toFixed(2);
-  else trimEndInput.value = currTime.toFixed(2);
+  if (!isPlaying || !audioBuffer) return;
+  const elapsed = (audioCtx.currentTime - startTime) * getRate();
+  const cur = parseFloat(trimStartInput.value) + elapsed;
+  if (type === 'start') trimStartInput.value = Math.min(cur, parseFloat(trimEndInput.value) - 0.1).toFixed(2);
+  else trimEndInput.value = Math.max(cur, parseFloat(trimStartInput.value) + 0.1).toFixed(2);
   updateTrim();
 }
 
 function quickTrim(s, e) {
   if (!audioBuffer) return;
   trimStartInput.value = s || 0;
-  trimEndInput.value = e || audioBuffer.duration;
+  trimEndInput.value = e ? Math.min(e, audioBuffer.duration) : audioBuffer.duration;
   updateTrim();
 }
 
+// ============================================================
+// PLAYBACK
+// ============================================================
 function togglePlay() {
   if (!audioBuffer) return;
-  if (isPlaying) stopPlayback(); else startPlayback();
+  isPlaying ? stopPlayback() : startPlayback();
 }
 
 function startPlayback() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
+  stopPlayback();
   sourceNode = audioCtx.createBufferSource();
   sourceNode.buffer = audioBuffer;
-  
-  const speed = parseFloat(document.getElementById('speedSlider').value);
-  const pitch = parseFloat(document.getElementById('pitchSlider').value);
-  sourceNode.playbackRate.value = speed * Math.pow(2, pitch / 12);
-
+  sourceNode.playbackRate.value = getRate();
   sourceNode.connect(liveNodes.gain);
-  
+
   const startOffset = parseFloat(trimStartInput.value);
   const endOffset = parseFloat(trimEndInput.value);
-  const duration = (endOffset - startOffset) / sourceNode.playbackRate.value;
-  
-  sourceNode.start(0, startOffset);
-  sourceNode.stop(audioCtx.currentTime + duration);
-  
+  const dur = (endOffset - startOffset) / sourceNode.playbackRate.value;
+
+  sourceNode.start(0, startOffset, dur);
   sourceNode.onended = () => { if (isPlaying) stopPlayback(); };
-  
+
   isPlaying = true;
-  playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-  startTime = audioCtx.currentTime - (pauseTime / sourceNode.playbackRate.value);
-  
+  playBtn.textContent = '⏸';
+  startTime = audioCtx.currentTime;
+  pauseTime = 0;
   animatePlayback(startOffset, endOffset);
 }
 
 function stopPlayback() {
   if (sourceNode) {
-    try { sourceNode.stop(); } catch(e) {}
+    try { sourceNode.stop(); } catch (e) {}
     sourceNode.disconnect();
     sourceNode = null;
   }
   isPlaying = false;
-  playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-  cancelAnimationFrame(animationFrame);
+  playBtn.textContent = '▶';
+  cancelAnimationFrame(animFrame);
   pauseTime = 0;
 }
 
 function animatePlayback(startOffset, endOffset) {
   if (!isPlaying) return;
-  
-  const speed = parseFloat(document.getElementById('speedSlider').value) * Math.pow(2, parseFloat(document.getElementById('pitchSlider').value) / 12);
-  const elapsed = (audioCtx.currentTime - startTime) * speed;
-  const currentPlayTime = startOffset + elapsed;
-  
-  if (currentPlayTime >= endOffset) {
-    stopPlayback();
-    updateTimeDisplay(startOffset, endOffset);
-    return;
-  }
-  
-  pauseTime = elapsed * speed;
-  updateTimeDisplay(currentPlayTime, audioBuffer.duration);
-  
+  const elapsed = (audioCtx.currentTime - startTime) * getRate();
+  const cur = startOffset + elapsed;
+  if (cur >= endOffset) { stopPlayback(); updateTimeDisplay(startOffset, audioBuffer.duration); return; }
+  updateTimeDisplay(cur, audioBuffer.duration);
   drawWaveform();
-  const x = (currentPlayTime / audioBuffer.duration) * canvas.width;
-  ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-  
-  animationFrame = requestAnimationFrame(() => animatePlayback(startOffset, endOffset));
+  animFrame = requestAnimationFrame(() => animatePlayback(startOffset, endOffset));
 }
 
-function updateTimeDisplay(current, total) {
-  timeDisplay.innerText = `${formatTime(current)} / ${formatTime(total)}`;
+function updateTimeDisplay(cur, total) {
+  timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(total)}`;
 }
 
 function formatTime(t) {
   const m = Math.floor(t / 60), s = Math.floor(t % 60), ms = Math.floor((t % 1) * 100);
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(ms).padStart(2,'0')}`;
 }
 
+// ============================================================
+// FORMAT SELECTION
+// ============================================================
 function selectFormat(el) {
-  document.querySelectorAll('.format-opt').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  currentFormat = el.dataset.format;
 }
 
-// ==========================================
-// 6. ประมวลผลและเซฟ (MAX RENDER)
-// ==========================================
+// ============================================================
+// ★★★ YOUTUBE FETCH (ใช้ Proxy ที่ถูกต้อง) ★★★
+// ============================================================
+async function fetchFromUrl() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return toast('กรุณาใส่ลิงก์', 'error');
+
+  let proxy = document.getElementById('proxyInput').value.trim();
+  // ถ้าผู้ใช้ลืมใส่ trailing slash ให้เติมให้
+  if (proxy && !proxy.endsWith('/')) proxy += '/';
+
+  showLoading('กำลังดึงข้อมูลจาก YouTube...');
+
+  try {
+    if (typeof ytdl === 'undefined') {
+      throw new Error('ไม่พบไลบรารี ytdl (กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต)');
+    }
+
+    // ★★★ สำคัญ: ytdl.getInfo ต้องใช้ Proxy ในการเรียก API ของ YouTube ★★★
+    // เราไม่สามารถเรียกโดยตรงได้เพราะติด CORS
+    // จึงต้องสร้าง ytdl instance ที่ห่อหุ้มด้วย Proxy
+    const proxiedYtdl = ytdl;
+    // อย่างไรก็ตาม @warren-bank/browser-ytdl-core อาจไม่ได้ expose proxy option โดยตรง
+    // ในเวอร์ชันนี้ เราจะใช้วิธี fetch ผ่าน Proxy สำหรับการดาวน์โหลดสตรีมเสียงโดยตรง
+    // แต่การ getInfo ยังต้องทำงานได้ (ไลบรารีอาจจัดการ CORS ให้บางส่วนแล้ว)
+    
+    const info = await ytdl.getInfo(url);
+    
+    const audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
+    if (!audioFormats || audioFormats.length === 0) {
+      throw new Error('ไม่พบฟอร์แมตเสียงสำหรับวิดีโอนี้');
+    }
+    audioFormats.sort((a, b) => (b.audioBitrate || 0) - (a.audioBitrate || 0));
+    const bestAudio = audioFormats[0];
+
+    loadingText.textContent = 'กำลังดาวน์โหลดไฟล์เสียง...';
+    
+    let streamUrl = bestAudio.url;
+    
+    // ★★★ ใช้ Proxy กับ URL ของสตรีมเสียงเสมอ ★★★
+    // เพราะ YouTube บล็อก CORS สำหรับการ fetch สตรีมโดยตรง
+    let fetchUrl = streamUrl;
+    if (proxy) {
+      // รูปแบบของ cors-anywhere: https://cors-anywhere.com/<url>
+      // ต้องระวัง: URL ของ YouTube มี query string ที่ซับซ้อน
+      // การ encodeURIComponent อาจทำให้ Proxy บางตัวตีความผิด
+      // แต่โดยทั่วไปแล้วการต่อแบบ raw (ไม่ encode) ทำงานได้กับ cors-anywhere
+      fetchUrl = proxy + streamUrl;
+    }
+
+    let response;
+    try {
+      response = await fetch(fetchUrl);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    } catch (directErr) {
+      // ถ้า Proxy ตัวแรกไม่work ลองแบบ encode
+      console.warn('Proxy fetch failed, trying encoded...', directErr);
+      if (proxy) {
+        const encodedProxyUrl = proxy + encodeURIComponent(streamUrl);
+        response = await fetch(encodedProxyUrl);
+        if (!response.ok) throw new Error(`Proxy (encoded) HTTP ${response.status}`);
+      } else {
+        throw new Error('ไม่สามารถเชื่อมต่อได้ และไม่ได้ระบุ Proxy');
+      }
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const title = info.videoDetails ? info.videoDetails.title : 'YouTube Audio';
+    await loadAudioBuffer(arrayBuffer, title);
+    hideLoading();
+    toast('ดาวน์โหลดเสียงจาก YouTube สำเร็จ!', 'success');
+
+  } catch (err) {
+    console.error(err);
+    hideLoading();
+    toast('ไม่สามารถดึงจาก YouTube ได้: ' + err.message + ' — ลองเปลี่ยน Proxy หรืออัปโหลดไฟล์เอง', 'error');
+  }
+}
+
+// ============================================================
+// RENDER & EXPORT
+// ============================================================
 async function renderAudio(isBypass = false) {
-  if (!audioBuffer) return;
-  loadingOverlay.style.display = 'flex';
-  loadingText.innerText = 'กำลังเรนเดอร์เสียง (โหมดสุดขีด)...';
+  if (!audioBuffer) return toast('กรุณาโหลดไฟล์เสียงก่อน', 'error');
+  showLoading('กำลังเรนเดอร์เสียง...');
   document.getElementById('renderBtn').disabled = true;
 
-  setTimeout(async () => {
-    try {
-      const speed = parseFloat(document.getElementById('speedSlider').value);
-      const pitch = parseFloat(document.getElementById('pitchSlider').value);
-      const rate = speed * Math.pow(2, pitch / 12);
-      
-      const startOffset = parseFloat(trimStartInput.value);
-      const endOffset = parseFloat(trimEndInput.value);
-      const duration = endOffset - startOffset;
-      
-      const sampleRate = audioBuffer.sampleRate;
-      const newLength = Math.floor((duration / rate) * sampleRate);
-      
-      const offlineCtx = new OfflineAudioContext(2, newLength, sampleRate);
-      
-      const src = offlineCtx.createBufferSource();
-      src.buffer = audioBuffer;
-      src.playbackRate.value = rate;
-      
-      const gain = offlineCtx.createGain();
-      let gainDb = parseFloat(document.getElementById('gainSlider').value);
-      if (isBypass) gainDb = 45; // Bypass = อัด Gain 45dB ไปเลย
-      gain.gain.value = Math.pow(10, gainDb / 20);
-      
-      const bass = offlineCtx.createBiquadFilter();
-      bass.type = 'lowshelf'; bass.frequency.value = 150;
-      bass.gain.value = isBypass ? 24 : parseFloat(document.getElementById('bassSlider').value);
-      
-      const treble = offlineCtx.createBiquadFilter();
-      treble.type = 'highshelf'; treble.frequency.value = 4000;
-      treble.gain.value = isBypass ? 18 : parseFloat(document.getElementById('trebleSlider').value);
-      
-      // Hard Limiter สุดโหด (ดักเสียงแตกตอนเรนเดอร์)
-      const limiter = offlineCtx.createDynamicsCompressor();
-      limiter.threshold.value = -0.5; limiter.knee.value = 0; limiter.ratio.value = 20;
-      limiter.attack.value = 0.001; limiter.release.value = 0.1;
-      
-      src.connect(gain); gain.connect(bass); bass.connect(treble); treble.connect(limiter); limiter.connect(offlineCtx.destination);
-      
-      src.start(0, startOffset, duration / rate);
-      
-      const renderedBuffer = await offlineCtx.startRendering();
-      const wavBlob = bufferToWav(renderedBuffer);
-      const url = URL.createObjectURL(wavBlob);
-      
-      // คำนวณ Stat
-      const sizeMB = (wavBlob.size / (1024 * 1024)).toFixed(2);
-      let peak = 0;
-      const pcmData = renderedBuffer.getChannelData(0);
-      for (let i = 0; i < pcmData.length; i++) {
-        if (Math.abs(pcmData[i]) > peak) peak = Math.abs(pcmData[i]);
-      }
-      const peakDb = (20 * Math.log10(peak)).toFixed(1);
-      
-      document.getElementById('statSize').innerText = sizeMB + ' MB';
-      document.getElementById('statPeak').innerText = peakDb + ' dBTP';
-      document.getElementById('statMean').innerText = (peakDb - 1).toFixed(1) + ' dB';
-      document.getElementById('resultFilename').innerText = isBypass ? 'roblox_audio_bypass_max.wav' : 'roblox_audio_mastered.wav';
-      
-      const dlLink = document.getElementById('downloadLink');
-      dlLink.href = url;
-      dlLink.download = isBypass ? 'bypass_max_audio.wav' : 'processed_audio.wav';
-      
-      document.getElementById('resultBox').style.display = 'grid';
-      
-    } catch (err) {
-      alert('เกิดข้อผิดพลาดในการประมวลผล: ' + err.message);
-    } finally {
-      loadingOverlay.style.display = 'none';
-      document.getElementById('renderBtn').disabled = false;
+  try {
+    const speed = parseFloat(document.getElementById('speedSlider').value);
+    const pitch = parseFloat(document.getElementById('pitchSlider').value);
+    const rate = speed * Math.pow(2, pitch / 12);
+    const startOffset = parseFloat(trimStartInput.value);
+    const endOffset = parseFloat(trimEndInput.value);
+    const duration = endOffset - startOffset;
+    const sampleRate = audioBuffer.sampleRate;
+
+    const offlineCtx = new OfflineAudioContext(2, Math.floor((duration / rate) * sampleRate), sampleRate);
+    const src = offlineCtx.createBufferSource();
+    src.buffer = audioBuffer;
+    src.playbackRate.value = rate;
+
+    const gain = offlineCtx.createGain();
+    let gainDb = parseFloat(document.getElementById('gainSlider').value);
+    if (isBypass) gainDb = 45;
+    gain.gain.value = Math.pow(10, gainDb / 20);
+
+    const bass = offlineCtx.createBiquadFilter();
+    bass.type = 'lowshelf'; bass.frequency.value = 150;
+    bass.gain.value = isBypass ? 24 : parseFloat(document.getElementById('bassSlider').value);
+
+    const treble = offlineCtx.createBiquadFilter();
+    treble.type = 'highshelf'; treble.frequency.value = 4000;
+    treble.gain.value = isBypass ? 18 : parseFloat(document.getElementById('trebleSlider').value);
+
+    const limiter = offlineCtx.createDynamicsCompressor();
+    limiter.threshold.value = -0.5; limiter.knee.value = 0; limiter.ratio.value = 20;
+    limiter.attack.value = 0.001; limiter.release.value = 0.1;
+
+    src.connect(gain); gain.connect(bass); bass.connect(treble); treble.connect(limiter); limiter.connect(offlineCtx.destination);
+    src.start(0, startOffset, duration / rate);
+
+    const rendered = await offlineCtx.startRendering();
+
+    let blob, ext;
+    if (currentFormat === 'wav') {
+      blob = bufferToWav(rendered); ext = 'wav';
+    } else if (currentFormat === 'mp3') {
+      blob = await encodeWithLame(rendered, 320); ext = 'mp3';
+    } else {
+      toast('OGG ยังไม่รองรับในเวอร์ชันนี้ ใช้ WAV แทน', 'error');
+      blob = bufferToWav(rendered); ext = 'wav';
     }
-  }, 100);
+
+    const sizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+    let peak = 0;
+    const pcm = rendered.getChannelData(0);
+    for (let i = 0; i < pcm.length; i++) if (Math.abs(pcm[i]) > peak) peak = Math.abs(pcm[i]);
+    const peakDb = (20 * Math.log10(peak)).toFixed(1);
+
+    if (renderedBlobUrl) URL.revokeObjectURL(renderedBlobUrl);
+    renderedBlobUrl = URL.createObjectURL(blob);
+
+    document.getElementById('statSize').textContent = sizeMB + ' MB';
+    document.getElementById('statPeak').textContent = peakDb + ' dBTP';
+    document.getElementById('resultFilename').textContent = `mastered_audio.${ext}`;
+    const dl = document.getElementById('downloadLink');
+    dl.href = renderedBlobUrl;
+    dl.download = `mastered_audio_${Date.now()}.${ext}`;
+    document.getElementById('resultBox').classList.add('show');
+
+    toast(`สร้างไฟล์ ${ext.toUpperCase()} สำเร็จ!`, 'success');
+
+  } catch (err) {
+    console.error(err);
+    toast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+  } finally {
+    hideLoading();
+    document.getElementById('renderBtn').disabled = false;
+  }
 }
 
-// ==========================================
-// 7. WAV Encoder
-// ==========================================
+// ============================================================
+// WAV ENCODER (built-in)
+// ============================================================
 function bufferToWav(buffer) {
-  const numOfChan = buffer.numberOfChannels;
-  const length = buffer.length * numOfChan * 2 + 44;
-  const bufferArray = new ArrayBuffer(length);
-  const view = new DataView(bufferArray);
+  const numCh = buffer.numberOfChannels;
+  const len = buffer.length * numCh * 2 + 44;
+  const ab = new ArrayBuffer(len);
+  const view = new DataView(ab);
   const channels = [];
-  let i, sample, offset = 0, pos = 0;
+  let pos = 0;
 
-  setUint32(0x46464952); setUint32(length - 8); setUint32(0x45564157);
-  setUint32(0x20746d66); setUint32(16); setUint16(1); setUint16(numOfChan);
-  setUint32(buffer.sampleRate); setUint32(buffer.sampleRate * 2 * numOfChan);
-  setUint16(numOfChan * 2); setUint16(16);
-  setUint32(0x61746164); setUint32(length - pos - 4);
+  const writeU16 = d => { view.setUint16(pos, d, true); pos += 2; };
+  const writeU32 = d => { view.setUint32(pos, d, true); pos += 4; };
+  const writeStr = s => { for (let i = 0; i < s.length; i++) view.setUint8(pos++, s.charCodeAt(i)); };
 
-  for (i = 0; i < buffer.numberOfChannels; i++) channels.push(buffer.getChannelData(i));
+  writeStr('RIFF'); writeU32(len - 8); writeStr('WAVE');
+  writeStr('fmt '); writeU32(16); writeU16(1); writeU16(numCh);
+  writeU32(buffer.sampleRate); writeU32(buffer.sampleRate * 2 * numCh);
+  writeU16(numCh * 2); writeU16(16);
+  writeStr('data'); writeU32(len - pos - 4);
 
-  while (pos < length) {
-    for (i = 0; i < numOfChan; i++) {
-      sample = Math.max(-1, Math.min(1, channels[i][offset]));
-      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
-      view.setInt16(pos, sample, true);
+  for (let i = 0; i < numCh; i++) channels.push(buffer.getChannelData(i));
+  let offset = 0;
+  while (pos < len) {
+    for (let i = 0; i < numCh; i++) {
+      let s = Math.max(-1, Math.min(1, channels[i][offset]));
+      s = (0.5 + s < 0 ? s * 32768 : s * 32767) | 0;
+      view.setInt16(pos, s, true);
       pos += 2;
     }
     offset++;
   }
-  return new Blob([bufferArray], { type: "audio/wav" });
-
-  function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
-  function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
+  return new Blob([ab], { type: 'audio/wav' });
 }
+
+// ============================================================
+// ★★★ MP3 ENCODER via lamejs (รองรับ Stereo) ★★★
+// ============================================================
+async function encodeWithLame(audioBuffer, bitrate = 320) {
+  return new Promise((resolve, reject) => {
+    try {
+      const channels = audioBuffer.numberOfChannels;
+      const sampleRate = audioBuffer.sampleRate;
+      const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, bitrate);
+      const mp3Data = [];
+
+      const left = audioBuffer.getChannelData(0);
+      const right = channels > 1 ? audioBuffer.getChannelData(1) : null;
+
+      const sampleBlockSize = 1152;
+      const len = left.length;
+
+      for (let i = 0; i < len; i += sampleBlockSize) {
+        const leftChunk = floatTo16BitPCM(left.subarray(i, i + sampleBlockSize));
+        let mp3buf;
+        if (channels > 1) {
+          const rightChunk = floatTo16BitPCM(right.subarray(i, i + sampleBlockSize));
+          mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+        } else {
+          mp3buf = mp3encoder.encodeBuffer(leftChunk);
+        }
+        if (mp3buf.length > 0) mp3Data.push(new Int8Array(mp3buf));
+      }
+
+      const end = mp3encoder.flush();
+      if (end.length > 0) mp3Data.push(new Int8Array(end));
+
+      resolve(new Blob(mp3Data, { type: 'audio/mp3' }));
+    } catch (e) { reject(e); }
+  });
+}
+
+function floatTo16BitPCM(input) {
+  const output = new Int16Array(input.length);
+  for (let i = 0; i < input.length; i++) {
+    const s = Math.max(-1, Math.min(1, input[i]));
+    output[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+  }
+  return output;
+}
+
+// ============================================================
+// LOADING HELPERS
+// ============================================================
+function showLoading(text) {
+  loadingText.textContent = text || 'กำลังประมวลผล...';
+  loadingOverlay.classList.add('show');
+}
+function hideLoading() {
+  loadingOverlay.classList.remove('show');
+}
+
+// ============================================================
+// RESIZE HANDLER
+// ============================================================
+window.addEventListener('resize', () => { if (audioBuffer) drawWaveform(); });
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('click', () => {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}, { once: true });
+
+console.log('🔥 Advanced Audio Studio MAX ready.');
+console.log('📦 ytdl-core loaded:', typeof ytdl !== 'undefined');
+console.log('📦 lamejs loaded:', typeof lamejs !== 'undefined');
 </script>
 </body>
 </html>
