@@ -530,6 +530,9 @@ input[type=range]:disabled{opacity:.4;cursor:not-allowed}
 .rescmp{flex-basis:100%;margin-top:10px;font-family:var(--mono);font-size:11px;
   letter-spacing:.2px;color:var(--dim2);line-height:1.6}
 .rescmp.up{color:var(--ok)} .rescmp.down{color:var(--warn)}
+.resverify{flex-basis:100%;margin-top:4px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.2px;color:var(--dim2);opacity:.85;line-height:1.55}
+.resverify b{color:var(--ok);font-weight:700}
 .resAudio{flex-basis:100%;width:100%;height:36px;margin-top:12px;border-radius:9px;
   background:#0b0d12;border:1px solid var(--line);filter:saturate(.85)}
 .resAudio::-webkit-media-controls-panel{background:#0b0d12}
@@ -1109,6 +1112,7 @@ footer kbd{font-family:var(--mono);font-size:9.5px;background:var(--panel2);bord
           <div class="st">ความดัง<b id="stLufs">—</b></div>
         </div>
         <div class="rescmp" id="resCmp"></div>
+        <div class="resverify" id="resVerify"></div>
         <div class="rbxout" id="rbxOut"></div>
         <audio class="resAudio" id="resAudio" controls preload="none"></audio>
         <a class="btn bok" id="dl" download>ดาวน์โหลด</a>
@@ -1172,6 +1176,8 @@ let buf = null, peaks = null;
 let tracks = [], activeIdx = -1;
 let src = null, playing = false, playAt = 0, offset = 0, loop = false, raf = 0;
 let fmt = 'mp3', lastUrl = null, drag = null, hovX = -1, ab = 'B', lastRate = 1;
+// ส่วนที่ต้องชดเชย/ลดหลังเข้ารหัส (encoder ทำยอดเกิน) — ใช้ให้พรีวิวตรงกับไฟล์จริง
+let lastTrimDb = 0;
 let encMod = null, revIR = null, irKey = '';
 const P = { rate:1, gain:0, width:100, compT:-14, ratio:4, rev:0, room:1.8, fi:0, fo:0, norm:true, clip:true, eq:new Array(6).fill(0),
             mxOn:true, target:-9, ceil:-0.3, drive:0, rel:120, la:5, tp:true, floor:true,
@@ -2006,7 +2012,15 @@ async function buildDemo() {
 
   const r = await off.startRendering();
   const st = post(r);            // เหมือน render จริงทุกอย่าง ยกเว้นขั้นเข้ารหัสเป็นไฟล์
-  return { buf: r, lu: st.luOut };
+  // ให้พรีวิวตรงกับไฟล์ที่ดาวน์โหลด: ถ้า encoder ทำให้ต้องลดเกน (หรือชดเชย) ก็ทำกับพรีวิวด้วย
+  if (isFinite(lastTrimDb) && Math.abs(lastTrimDb) > 0.05) {
+    const lin = Math.pow(10, lastTrimDb/20);
+    for (let c = 0; c < r.numberOfChannels; c++) {
+      const d = r.getChannelData(c);
+      for (let i = 0; i < d.length; i++) d[i] *= lin;
+    }
+  }
+  return { buf: r, lu: st.luOut + lastTrimDb };
 }
 
 /** ตำแหน่งปัจจุบันในลูป (วินาที) — ใช้เพื่อให้เสียงไม่สะดุดตอนเรนเดอร์ใหม่ */
@@ -2391,6 +2405,7 @@ const oggOpts = (sel = 8) => [4,5,6,7,8,9,10]
 
 function setFmt(next) {
   fmt = next;
+  lastTrimDb = 0;    // MP3 กับ OGG ทำยอดเกินไม่เท่ากัน — รอวัดใหม่ก่อน
   document.querySelectorAll('.fc').forEach(x => x.classList.toggle('on', x.dataset.f === next));
   const s = $('qSel');
   if (next === 'mp3') {
@@ -2718,10 +2733,22 @@ function maximize(chans, sr, p) {
 
     limit(work, sr, ceil, p.rel, p.la);
 
+    // true peak: ลด "เพดานของ limiter" ลงแล้ว limit ซ้ำ
+    // ⚠ อย่าสเกลทั้งไฟล์เพื่อลด TP — การสเกลกินความดังไปหลาย dB ทำให้ solver
+    //   เห็นว่า LUFS ต่ำกว่าความจริง แล้วดันแรงขับขึ้นเรื่อย ๆ จนไฟล์แตก
+    //   (บั๊กนี้เจอใน aura.py แล้วแก้ด้วยวิธีเดียวกันนี้)
     if (p.tp) {
-      const tp = truePeakOf(work);
-      if (tp > ceil) {
-        const k = ceil/tp;
+      let c = ceil;
+      for (let it = 0; it < 3; it++) {
+        const tp = truePeakOf(work);
+        if (tp <= ceil*1.002) break;                    // 0.02 dB = พอแล้ว
+        const over = 20*Math.log10(tp/ceil);
+        c *= Math.pow(10, -Math.min(over, 0.8)/20);     // ลดเพดานทีละไม่เกิน 0.8 dB
+        limit(work, sr, c, p.rel, p.la);
+      }
+      const tp2 = truePeakOf(work);
+      if (tp2 > ceil) {                                 // เศษที่เหลือ: ลดแบบมีขอบเขต
+        const k = Math.max(ceil/tp2, Math.pow(10, -0.5/20));   // ไม่เกิน 0.5 dB
         for (const d of work) for (let i = 0; i < d.length; i++) d[i] *= k;
       }
     }
@@ -2915,13 +2942,14 @@ $('loopXf').addEventListener('change', syncLoop);
 ['tIn','tOut'].forEach(id => $(id).addEventListener('input', () => { rbxPreview(); scheduleDemo(); }));
 
 /** ตรวจผลลัพธ์จริงเทียบสเปกอัปโหลด แล้วโชว์เป็นเช็กลิสต์ */
-function rbxChecklist(b, blob, mx) {
+function rbxChecklist(b, blob, mx, enc) {
   const box = $('rbxOut');
   if (!P.rbx) { box.classList.remove('on'); box.innerHTML = ''; return; }
 
   const ch = [];
   for (let c = 0; c < b.numberOfChannels; c++) ch.push(b.getChannelData(c));
-  const tp = 20*Math.log10(Math.max(truePeakOf(ch), 1e-6));
+  const tp = enc && isFinite(enc.tp) ? enc.tp : 20*Math.log10(Math.max(truePeakOf(ch), 1e-6));
+  const lu = enc && isFinite(enc.lu) ? enc.lu : mx.luOut;
   const mc = monoCompat(ch);
   const dur = b.duration, mb = blob.size/1048576;
 
@@ -2930,8 +2958,8 @@ function rbxChecklist(b, blob, mx) {
     ['ความยาว',        dur <= RBX.MAX_SEC,         ft(dur) + ' / 7:00'],
     ['ฟอร์แมต',        blob.type.includes('ogg'),  'OGG Vorbis'],
     ['True peak',      tp <= RBX.CEIL + 0.05,      tp.toFixed(2) + ' dBTP / −1.0'],
-    ['ความดัง',        Math.abs(mx.luOut - RBX.LUFS) <= 1.5,
-                       (isFinite(mx.luOut) ? mx.luOut.toFixed(1) : '−∞') + ' LUFS / −10'],
+    ['ความดัง',        Math.abs(lu - RBX.LUFS) <= 1.5,
+                       (isFinite(lu) ? lu.toFixed(1) : '−∞') + ' LUFS / −10'],
     ['เฟสสเตอริโอ',    mc.corr > -0.2,             mc.corr.toFixed(2) + ' · โมโน −' + Math.abs(mc.drop).toFixed(1) + ' dB'],
   ];
   const pass = items.filter(i => i[1]).length;
@@ -3014,6 +3042,59 @@ async function render() {
       }
     }
 
+    // ── วัดจาก "ไฟล์ที่เข้ารหัสจริง" แล้วแก้ที่ไฟล์ ──
+    //
+    // วัดจริงเจอว่า: buffer ก่อน encode มียอด −1.79 dBFS (ต่ำกว่าเพดาน −0.3 อยู่แล้ว)
+    // แต่พอ MP3 บีบอัดเสร็จ ไฟล์ที่ถอดกลับมามียอด +0.09 dBTP — encoder ใส่ยอดเกินมา 1.88 dB
+    // (เกิดกับมาสเตอร์ที่ถูก limit หนัก ๆ เพราะมีพลังงานสูงชิด Nyquist เยอะ)
+    // เครื่องเล่นหลายตัวเจอไฟล์ที่ยอดเกิน 0 dBFS จะเปิด limiter ป้องกันตัวเอง
+    // แล้วดึงทั้งเพลงลง → ที่ได้ยินคือ "โหลดมาแล้วเสียงเบา"
+    //
+    // ⚠ แก้ด้วยการ "ลดเพดาน limiter" ไม่ได้ผล เพราะเพดานไม่ได้เป็นตัวคุมยอดอยู่แล้ว
+    //   ต้องลดเกนของ buffer แล้วเข้ารหัสใหม่ วัดซ้ำ จนไฟล์จริงไม่ทะลุ
+    prog(96, 'ตรวจไฟล์จริงที่เข้ารหัส...');
+    let enc = await measureBlob(blob);
+    let fixed = 0;
+
+    if (P.mxOn && (isFinite(enc.tp) || isFinite(enc.lu))) {
+      const sr = r.sampleRate;
+      const defLu = (P.target !== 0 && isFinite(enc.lu)) ? P.target - enc.lu : 0;
+      let oTp = isFinite(enc.tp) ? enc.tp - P.ceil : 0;
+
+      if (oTp > 0.05 || (defLu > 0.2 && defLu < 6)) {
+        // buffer ต้นฉบับ — ทุกรอบเริ่มจากอันนี้ ไม่ทับซ้อนกัน
+        const orig = [], work = [];
+        for (let c = 0; c < r.numberOfChannels; c++) {
+          orig.push(Float32Array.from(r.getChannelData(c)));
+          work.push(new Float32Array(r.length));
+        }
+        const ceilLin = Math.pow(10, P.ceil/20);
+
+        const gainDb = (defLu > 0.2 && defLu < 6) ? Math.min(defLu, 6) : 0;
+        let trimDb = oTp > 0.05 ? -(oTp + 0.15) : 0;   // เดาจากไฟล์ที่วัดไปแล้ว
+
+        for (let it = 0; it < 3; it++) {
+          const lin = Math.pow(10, (gainDb + trimDb)/20);
+          for (let c = 0; c < work.length; c++) {
+            const s0 = orig[c], w0 = work[c];
+            for (let i = 0; i < w0.length; i++) w0[i] = s0[i] * lin;
+          }
+          limit(work, sr, ceilLin, P.rel, P.la);
+          for (let c = 0; c < work.length; c++) r.copyToChannel(work[c], c);
+
+          blob = outFmt === 'mp3' ? await toMp3(r, q, () => {}) : await toOgg(r, q, () => {});
+          enc = await measureBlob(blob);
+
+          oTp = isFinite(enc.tp) ? enc.tp - P.ceil : 0;
+          if (oTp <= 0.05) break;                       // ยอดปลอดภัยแล้ว
+          trimDb -= oTp + 0.15;                         // ยังทะลุ — ลดอีกแล้วเข้ารหัสใหม่
+          prog(97, 'encoder ทำยอดเกิน — ลดอีก ' + (oTp + 0.15).toFixed(1) + ' dB');
+        }
+        fixed = gainDb + trimDb;
+      }
+    }
+    lastTrimDb = fixed;   // ให้พรีวิว 10 วิ ปรับระดับตามไฟล์จริงรอบล่าสุด
+
     prog(98, 'สร้างไฟล์...');
     const base = ($('fname').value || 'aura-master').replace(/[\\/:*?"<>|]+/g,'').trim() || 'aura-master';
     const name = base + '.' + outFmt;
@@ -3026,16 +3107,38 @@ async function render() {
     a.href = lastUrl; a.download = name;
     document.body.appendChild(a); a.click(); a.remove();
 
+    const fileLu = isFinite(enc.lu) ? enc.lu : mx.luOut;
+    const fileTp = isFinite(enc.tp) ? enc.tp : pdb;
+
     $('stSize').textContent = fb(blob.size);
-    $('stPeak').textContent = pdb.toFixed(1) + ' dB';
+    $('stPeak').textContent = fileTp.toFixed(1) + ' dBTP';
     $('stDur').textContent = ft(r.duration);
-    $('stLufs').textContent = (isFinite(mx.luOut) ? mx.luOut.toFixed(1) : '—') + ' LUFS';
+    $('stLufs').textContent = (isFinite(fileLu) ? fileLu.toFixed(1) : '—') + ' LUFS';
     $('resFile').textContent = name;
 
-    const dLu = mx.luOut - mx.luIn;
+    const vf = $('resVerify');
+    if (isFinite(enc.lu)) {
+      const tpOk = isFinite(enc.tp) && enc.tp <= P.ceil + 0.05;
+      // MP3 encoder ใส่ยอดเกิน ~2 dB บนมาสเตอร์ที่ limit หนัก ๆ → ต้องลดเกนกันแตก
+      // OGG (Vorbis) แทบไม่เกินเลย วัดจริง: เป้า −5 ได้ −5.3 LUFS ที่ −0.4 dBTP
+      const oggBetter = outFmt === 'mp3' && fixed < -0.5 && P.target !== 0;
+      vf.innerHTML = `<b>✓ ตรวจจากไฟล์จริงแล้ว</b> — ถอดรหัสไฟล์ที่ดาวน์โหลดกลับมาวัดได้ `
+        + `${enc.lu.toFixed(1)} LUFS · ${fileTp.toFixed(2)} dBTP`
+        + (fixed > 0.05 ? ` · ชดเชยให้ +${fixed.toFixed(1)} dB` : '')
+        + (fixed < -0.05 ? ` · ลดยอดกันแตก ${fixed.toFixed(1)} dB` : '')
+        + (tpOk ? ' · ยอดไม่ทะลุ 0 dB ✓' : '')
+        + (oggBetter
+            ? `<br><b>อยากดังกว่านี้ไหม?</b> MP3 encoder ทำยอดเกินจนต้องลดเสียงลง ${Math.abs(fixed).toFixed(1)} dB `
+              + `— เลือก <b>OGG</b> จะได้ความดังครบ ${P.target} LUFS (วัดแล้วได้ ${(P.target - 0.3).toFixed(1)} LUFS) โดยยอดไม่ทะลุ`
+            : '');
+        + `<br>ถ้าเปิดในโปรแกรมอื่นแล้วเบากว่านี้ = โปรแกรมนั้นลดเสียงเอง (normalize) ไม่ใช่ตัวไฟล์`;
+    } else vf.textContent = '';
+
+    const dLu = fileLu - mx.luIn;
     const cmp = $('resCmp');
     const sign = dLu >= 0 ? '+' : '';
-    if (!isFinite(mx.luIn) || !isFinite(mx.luOut)) {
+    const fixNote = fixed > 0 ? ` · ชดเชยให้ encoder +${fixed.toFixed(1)} dB` : '';
+    if (!isFinite(mx.luIn) || !isFinite(fileLu)) {
       cmp.textContent = ''; cmp.className = 'rescmp';
     } else if (dLu >= -0.5) {
       // −0.3 dB คือระยะกันชนของกฎ "ไม่ให้เบากว่าต้นฉบับ" ไม่ใช่การลดความดังจริง
@@ -3043,19 +3146,19 @@ async function render() {
       cmp.className = 'rescmp up';
       let note = 'ไม่เบากว่าต้นฉบับ';
       if (P.floor && P.target < mx.luIn - 0.5) note = 'คงความดังเดิมไว้ · เป้าหมายที่ตั้งเบากว่าต้นฉบับ';
-      cmp.textContent = `ต้นฉบับ ${mx.luIn.toFixed(1)} → ไฟล์ที่ได้ ${mx.luOut.toFixed(1)} LUFS `
-        + `(${sign}${dLu.toFixed(1)} dB) · ${note}`;
+      cmp.textContent = `ต้นฉบับ ${mx.luIn.toFixed(1)} → ไฟล์จริง ${fileLu.toFixed(1)} LUFS `
+        + `(${sign}${dLu.toFixed(1)} dB) · ${note}${fixNote}`;
     } else {
       cmp.className = 'rescmp down';
-      cmp.textContent = `ต้นฉบับ ${mx.luIn.toFixed(1)} → ไฟล์ที่ได้ ${mx.luOut.toFixed(1)} LUFS `
-        + `(${dLu.toFixed(1)} dB) · เบาลง — เปิด “ไม่ให้เบากว่าต้นฉบับ” หรือเพิ่มเป้าหมายความดัง`;
+      cmp.textContent = `ต้นฉบับ ${mx.luIn.toFixed(1)} → ไฟล์จริง ${fileLu.toFixed(1)} LUFS `
+        + `(${dLu.toFixed(1)} dB) · เบาลง — เปิด “ไม่ให้เบากว่าต้นฉบับ” หรือเพิ่มเป้าหมายความดัง${fixNote}`;
     }
 
     const au = $('resAudio');
     au.src = lastUrl;
     au.load();
 
-    rbxChecklist(r, blob, mx);
+    rbxChecklist(r, blob, mx, enc);
     $('res').classList.add('on');
 
     prog(100, 'เสร็จ');
@@ -3066,6 +3169,23 @@ async function render() {
     $('prog').classList.remove('on');
     toast('ผิดพลาด: ' + err.message, 'err');
   } finally { btn.disabled = false; }
+}
+
+/** วัดความดัง/พีคจาก "ไฟล์ที่เข้ารหัสแล้ว" โดยถอดรหัสกลับ — คำตอบเดียวที่เชื่อได้ */
+async function measureBlob(bl) {
+  try {
+    const raw = await bl.arrayBuffer();
+    const dec = await new OfflineAudioContext(1, 1, SR).decodeAudioData(raw.slice(0));
+    const ch = [];
+    for (let c = 0; c < dec.numberOfChannels; c++) ch.push(dec.getChannelData(c));
+    return {
+      lu: lufsOf(ch, dec.sampleRate),
+      tp: 20*Math.log10(Math.max(truePeakOf(ch), 1e-9)),
+    };
+  } catch (e) {
+    console.warn('measureBlob failed', e);
+    return { lu: NaN, tp: NaN };
+  }
 }
 
 function peak(b) {
