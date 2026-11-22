@@ -32,6 +32,90 @@ body::after{
 }
 .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:34px 20px 60px}
 
+/* ══════════ INTRO MENU ══════════ */
+#menu{position:fixed;inset:0;z-index:500;display:grid;place-items:center;overflow:hidden;
+  background:#04050a;transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+#menu.gone{opacity:0;transform:scale(1.06);pointer-events:none}
+.aur{position:absolute;inset:-25%;filter:blur(90px);opacity:.75;pointer-events:none}
+.orb{position:absolute;border-radius:50%;mix-blend-mode:screen;will-change:transform}
+.orb.o1{width:46vw;height:46vw;background:radial-gradient(circle,#7c3aed,transparent 68%);
+  top:-8%;left:-6%;animation:fl1 19s ease-in-out infinite}
+.orb.o2{width:40vw;height:40vw;background:radial-gradient(circle,#06b6d4,transparent 68%);
+  bottom:-12%;right:-8%;animation:fl2 23s ease-in-out infinite}
+.orb.o3{width:32vw;height:32vw;background:radial-gradient(circle,#ec4899,transparent 70%);
+  top:38%;left:52%;animation:fl3 27s ease-in-out infinite;opacity:.6}
+.orb.o4{width:26vw;height:26vw;background:radial-gradient(circle,#34d399,transparent 70%);
+  bottom:22%;left:8%;animation:fl2 21s ease-in-out infinite reverse;opacity:.45}
+@keyframes fl1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(9vw,6vh) scale(1.14)}66%{transform:translate(-5vw,10vh) scale(.92)}}
+@keyframes fl2{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-11vw,-7vh) scale(1.16)}70%{transform:translate(6vw,-4vh) scale(.9)}}
+@keyframes fl3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-8vw,9vh) scale(1.2)}}
+
+.mwrap{position:relative;z-index:2;text-align:center;padding:30px;max-width:680px}
+#mcanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.mlogo{width:78px;height:78px;margin:0 auto 22px;border-radius:22px;
+  background:linear-gradient(145deg,#8b5cf6,#22d3ee);display:grid;place-items:center;
+  box-shadow:0 18px 56px rgba(139,92,246,.5),inset 0 1px 0 rgba(255,255,255,.34);
+  animation:mlogo 5s ease-in-out infinite}
+.mlogo svg{width:38px;height:38px}
+@keyframes mlogo{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(-3deg)}}
+
+.mbrand{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:5px;
+  color:#4d5668;margin-bottom:10px;animation:mfin .8s backwards}
+.mtitle{font-size:clamp(34px,7.4vw,60px);font-weight:800;letter-spacing:-.5px;line-height:1.18;
+  background:linear-gradient(100deg,#a78bfa 0%,#22d3ee 32%,#f0abfc 58%,#a78bfa 100%);
+  background-size:280% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shim 7s linear infinite}
+@keyframes shim{to{background-position:280% 0}}
+.msub{font-size:clamp(13px,2.1vw,16px);color:#8892a4;margin-top:14px;letter-spacing:.4px;line-height:1.75}
+.msub b{color:#c4b5fd;font-weight:700}
+
+.mfeat{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.mf{font-size:11.5px;font-weight:700;letter-spacing:.3px;padding:7px 14px;border-radius:99px;
+  border:1px solid rgba(255,255,255,.14);color:#a8b2c4;background:rgba(255,255,255,.035);
+  backdrop-filter:blur(8px);animation:mfin .7s backwards}
+.mf:nth-child(1){animation-delay:.15s}.mf:nth-child(2){animation-delay:.25s}
+.mf:nth-child(3){animation-delay:.35s}.mf:nth-child(4){animation-delay:.45s}
+@keyframes mfin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.mcta{margin-top:34px;position:relative;display:inline-flex}
+.mcta::before{content:'';position:absolute;inset:-3px;border-radius:16px;
+  background:linear-gradient(90deg,#8b5cf6,#22d3ee,#8b5cf6);background-size:200% 100%;
+  animation:shim 3s linear infinite;filter:blur(9px);opacity:.7}
+.mcta button{position:relative;font-family:inherit;font-size:15px;font-weight:750;letter-spacing:.2px;
+  color:#fff;background:linear-gradient(145deg,#7c3aed,#5b21b6);border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;padding:16px 42px;cursor:pointer;transition:.22s;
+  display:flex;align-items:center;gap:10px}
+.mcta button:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(139,92,246,.55)}
+.mcta button svg{width:18px;height:18px;transition:.22s}
+.mcta button:hover svg{transform:translateX(3px)}
+
+.mcred{margin-top:30px;font-size:12px;color:#4d5668;letter-spacing:.5px;line-height:2}
+.mcred b{font-weight:700;background:linear-gradient(90deg,#a78bfa,#22d3ee);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.mcred .sep{color:#2a3140;margin:0 9px}
+
+.mbars{position:absolute;left:0;right:0;bottom:0;height:70px;display:flex;align-items:flex-end;
+  justify-content:center;gap:3px;padding:0 12px;opacity:.35;pointer-events:none;z-index:1}
+.mbars i{display:block;width:3px;border-radius:99px;background:linear-gradient(180deg,#22d3ee,#8b5cf6);
+  animation:bar 1.1s ease-in-out infinite alternate}
+@keyframes bar{from{height:6px;opacity:.35}to{height:58px;opacity:1}}
+
+/* ══════════ TRACK RAIL ══════════ */
+.rail{display:flex;gap:7px;overflow-x:auto;padding-bottom:9px;margin-bottom:13px;scrollbar-width:thin}
+.rail::-webkit-scrollbar{height:4px}
+.rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:99px}
+.tk{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:9px;
+  background:var(--panel2);border:1px solid var(--line);cursor:pointer;transition:.16s;max-width:230px}
+.tk:hover{border-color:var(--line2);background:var(--panel3)}
+.tk.on{border-color:var(--vio);background:rgba(139,92,246,.13)}
+.tk .dot{width:5px;height:5px;border-radius:50%;background:var(--dim2);flex-shrink:0}
+.tk.on .dot{background:var(--vio);box-shadow:0 0 7px var(--vio)}
+.tk .nm{font-size:11.5px;font-weight:600;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tk.on .nm{color:var(--tx)}
+.tk .du{font-family:var(--mono);font-size:9.5px;color:var(--dim2);flex-shrink:0}
+.tk.add{border-style:dashed;color:var(--dim);font-size:11.5px;font-weight:650;gap:5px}
+.tk.add:hover{border-color:var(--vio);color:var(--vio)}
+
 /* ── header ── */
 header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:30px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:13px}
@@ -85,11 +169,49 @@ select{cursor:pointer;appearance:none;padding-right:32px;
   background-repeat:no-repeat;background-position:right 12px center}
 .hint{font-size:11.5px;color:var(--dim2);margin-top:9px;line-height:1.65}
 .hint b{color:var(--dim);font-weight:650}
+.or{display:flex;align-items:center;gap:13px;margin:17px 0;color:var(--dim2);
+  font-size:10.5px;font-weight:700;letter-spacing:1.4px}
+.or::before,.or::after{content:'';flex:1;height:1px;background:var(--line)}
 details{margin-top:10px}
 summary{font-size:11.5px;color:var(--dim);cursor:pointer;user-select:none;font-weight:600}
 summary:hover{color:var(--cy)}
 details pre{margin-top:9px;background:#05060a;border:1px solid var(--line);border-radius:8px;
   padding:12px;font-family:var(--mono);font-size:11px;color:#9fb0c8;overflow-x:auto;line-height:1.7}
+
+/* ── resolver settings ── */
+.rz{display:grid;gap:9px;margin-top:11px}
+.rz label{display:grid;gap:5px;font-size:11px;color:var(--dim);font-weight:600}
+.rz .opt{color:var(--dim2);font-weight:500}
+.rz input{font-size:12px;padding:9px 11px}
+.rzr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.rzs{font-size:11px;color:var(--dim2);font-family:var(--mono)}
+.rzs.ok{color:var(--ok)} .rzs.err{color:var(--err)}
+
+/* ── help sheet ── */
+.hlp{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:22px;
+  background:rgba(4,5,9,.88);backdrop-filter:blur(9px)}
+.hlp.on{display:grid}
+.hlpb{width:100%;max-width:530px;background:#0a0d15;border:1px solid var(--line);
+  border-radius:16px;padding:20px;box-shadow:0 30px 90px rgba(0,0,0,.6);
+  animation:hlIn .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes hlIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.hlph{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.hlph b{flex:1;font-size:14.5px;line-height:1.45}
+.hlph button{background:none;border:0;color:var(--dim);font-size:17px;cursor:pointer;line-height:1;padding:2px 4px}
+.hlph button:hover{color:var(--err)}
+.hlpw{font-size:12px;color:var(--dim);line-height:1.75;margin-bottom:14px}
+.hlpw b{color:#fff}
+.hlpk{font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:var(--dim2);
+  margin:15px 0 7px;text-transform:uppercase}
+.hlpc pre{margin:0;background:#05060a;border:1px solid var(--line);border-radius:9px;
+  padding:11px 12px;font-family:var(--mono);font-size:11px;color:#9fb0c8;
+  overflow-x:auto;line-height:1.75;position:relative;white-space:pre}
+.hlpc pre i{position:absolute;top:6px;right:7px;font-style:normal;font-size:9.5px;
+  font-weight:800;letter-spacing:.6px;color:var(--dim2);cursor:pointer;
+  border:1px solid var(--line);border-radius:5px;padding:2px 6px;background:#0a0d15}
+.hlpc pre i:hover{color:var(--cy);border-color:rgba(34,211,238,.45)}
+.hlpsteps{font-size:11.5px;color:var(--dim);line-height:1.9;padding-left:17px;margin:0}
+.hlpsteps li::marker{color:var(--vio);font-weight:800}
 
 /* ── buttons ── */
 .btn{font-family:inherit;font-size:13px;font-weight:650;border:1px solid transparent;border-radius:8px;
@@ -152,6 +274,15 @@ details pre{margin-top:9px;background:#05060a;border:1px solid var(--line);borde
   display:grid;place-items:center;transition:.16s;
   box-shadow:0 5px 20px rgba(139,92,246,.4),inset 0 1px 0 rgba(255,255,255,.26)}
 .play:hover{transform:scale(1.06)}
+.play:not(.on){animation:ppulse 2.8s ease-in-out infinite}
+@keyframes ppulse{
+  0%,100%{box-shadow:0 5px 20px rgba(139,92,246,.4),inset 0 1px 0 rgba(255,255,255,.26)}
+  50%{box-shadow:0 5px 34px rgba(139,92,246,.78),inset 0 1px 0 rgba(255,255,255,.26)}
+}
+.card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;border-radius:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,.65),rgba(34,211,238,.65),transparent);
+  opacity:0;transition:opacity .45s;pointer-events:none}
+.card:hover::before{opacity:1}
 .play svg{width:18px;height:18px;margin-left:2px}
 .play.on svg{margin-left:0}
 .time{font-family:var(--mono);font-size:12.5px;color:var(--cy);letter-spacing:.2px;white-space:nowrap}
@@ -298,6 +429,9 @@ input[type=range]:disabled{opacity:.4;cursor:not-allowed}
 footer{margin-top:38px;text-align:center;font-size:11px;color:var(--dim2);line-height:1.95}
 footer kbd{font-family:var(--mono);font-size:9.5px;background:var(--panel2);border:1px solid var(--line);
   border-bottom-width:2px;border-radius:3px;padding:1px 5px;color:var(--dim)}
+.fcred{margin-top:14px;font-size:11.5px;letter-spacing:.6px;color:var(--dim2)}
+.fcred b{font-weight:800;background:linear-gradient(90deg,#a78bfa,#22d3ee);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
 @media(max-width:640px){
   .wrap{padding:22px 13px 44px}
   h1{font-size:17px}
@@ -308,6 +442,53 @@ footer kbd{font-family:var(--mono);font-size:9.5px;background:var(--panel2);bord
 </style>
 </head>
 <body>
+
+<!-- ══════════ INTRO MENU ══════════ -->
+<div id="menu">
+  <div class="aur">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+    <div class="orb o4"></div>
+  </div>
+
+  <canvas id="mcanvas"></canvas>
+  <div class="mbars" id="mbars"></div>
+
+  <div class="mwrap">
+    <div class="mlogo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+      </svg>
+    </div>
+
+    <div class="mbrand">AURA STUDIO</div>
+    <div class="mtitle">ออร่า สตูดิโอ</div>
+    <div class="msub">
+      ห้องปรับแต่งเสียงในเบราว์เซอร์ · <b>อีคิว 6 ช่วง</b> · <b>เสียงสะท้อน</b> · <b>ดันความดัง</b><br>
+      รองรับทุกไฟล์ · ดังสูงสุดโดยไม่แตก · ส่งออก MP3 และ OGG
+    </div>
+
+    <div class="mfeat">
+      <span class="mf">🎚 อีคิว 6 ช่วง</span>
+      <span class="mf">🔊 ดันความดังสูงสุด</span>
+      <span class="mf">🎵 MP3 / OGG</span>
+      <span class="mf">🔗 วางลิงก์ได้</span>
+    </div>
+
+    <div class="mcta">
+      <button id="enterBtn">
+        เข้าใช้งาน
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="mcred">
+      by <b>vex555555555555</b> <span class="sep">·</span> by <b>มาร์ช</b>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
 <header>
@@ -318,14 +499,14 @@ footer kbd{font-family:var(--mono);font-size:9.5px;background:var(--panel2);bord
       </svg>
     </div>
     <div>
-      <h1>AURA <em>Studio</em></h1>
-      <div class="sub">6-Band EQ · Reverb · Compressor · MP3 / OGG</div>
+      <h1>ออร่า <em>สตูดิโอ</em></h1>
+      <div class="sub">อีคิว 6 ช่วง · เสียงสะท้อน · บีบอัด · MP3 / OGG</div>
     </div>
   </div>
   <div class="pills">
-    <span class="pill on" id="pEngine"><i></i>Engine Ready</span>
+    <span class="pill on" id="pEngine"><i></i>พร้อมใช้งาน</span>
     <span class="pill" id="pFmt"><i></i>MP3 320</span>
-    <span class="pill on"><i></i>Offline</span>
+    <span class="pill on"><i></i>ทำงานในเครื่อง</span>
   </div>
 </header>
 
@@ -338,50 +519,48 @@ footer kbd{font-family:var(--mono);font-size:9.5px;background:var(--panel2);bord
     </div>
   </div>
 
-  <div class="tabs">
-    <button class="tab on" data-p="f">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/></svg>
-      ไฟล์
-    </button>
-    <button class="tab" data-p="u">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      ลิงก์
-    </button>
+  <div class="drop" id="drop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+    <b>ลากไฟล์มาวางตรงนี้ หรือคลิกเพื่อเลือก</b>
+    <span>ใส่ได้หลายไฟล์พร้อมกัน · MP3 · WAV · OGG · FLAC · M4A · AAC · OPUS</span>
+    <input type="file" id="fileIn" accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a,.aac,.opus,.webm" multiple hidden>
   </div>
 
-  <div class="pane on" id="pf">
-    <div class="drop" id="drop">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-      <b>ลากไฟล์มาวาง หรือคลิกเลือก</b>
-      <span>MP3 · WAV · OGG · FLAC · M4A · AAC · OPUS · WEBM</span>
-      <input type="file" id="fileIn" accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a,.aac,.opus,.webm" hidden>
-    </div>
+  <div class="or"><span>หรือ</span></div>
+
+  <div class="row">
+    <input type="text" id="urlIn" placeholder="วางลิงก์อะไรก็ได้ — YouTube · SoundCloud · TikTok · Drive · ไฟล์ตรง">
+    <button class="btn bp" id="fetchBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+      ดึงเพลง
+    </button>
+  </div>
+  <div class="hint" id="urlHint">
+    <b>รองรับลิงก์ทุกแบบ</b> — ไฟล์เสียงตรง · Google Drive · Dropbox · OneDrive · MediaFire · GitHub ·
+    YouTube · SoundCloud · TikTok · Facebook · Instagram · X · Bilibili · Vimeo · Twitch
+    <br>ระบบเลือกช่องทางให้เองอัตโนมัติ (ตรง → พร็อกซี่ → ตัวแปลง) แล้วตรวจว่าได้ไฟล์เสียงจริงก่อนใช้
   </div>
 
-  <div class="pane" id="pu">
-    <div class="row">
-      <input type="text" id="urlIn" placeholder="https://... ลิงก์ไฟล์เสียงตรง (mp3 / m4a / wav / ogg)">
-      <button class="btn bp" id="fetchBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-        ดึง
-      </button>
-    </div>
-    <div class="hint">
-      <b>ลิงก์ไฟล์เสียงตรง</b> ใช้ได้ทันที · ถ้าติด CORS จะลอง proxy สาธารณะให้อัตโนมัติ
-    </div>
-    <details>
-      <summary>▸ ลิงก์ YouTube ทำไมใช้ไม่ได้ และจะแก้ยังไง</summary>
-      <div class="hint" style="margin-top:8px">
-        เบราว์เซอร์ดึง YouTube ไม่ได้เพราะ <b>CORS</b> + <b>signature cipher</b> — ไม่มี proxy สาธารณะตัวไหนแก้ได้แล้ว (Piped / Invidious / cobalt ตายหมดปี 2024+)
-        <br><br>ทางเดียวที่เหลือ: รัน resolver ในเครื่องตัวเอง
+  <details id="resBox">
+    <summary>ตั้งค่าตัวแปลงลิงก์ — เปิดใช้ YouTube / SoundCloud / TikTok</summary>
+    <div class="rz">
+      <label>ที่อยู่เซิร์ฟเวอร์แปลง (cobalt)
+        <input type="text" id="rzUrl" placeholder="https://cobalt.โดเมนของคุณ" spellcheck="false" autocomplete="off">
+      </label>
+      <label>API key <span class="opt">(ถ้าเซิร์ฟเวอร์ไม่ต้องใช้ เว้นว่าง)</span>
+        <input type="text" id="rzKey" placeholder="เว้นว่างได้" spellcheck="false" autocomplete="off">
+      </label>
+      <div class="rzr">
+        <button class="btn bg" id="rzSave">บันทึก</button>
+        <button class="btn bg" id="rzTest">ทดสอบ</button>
+        <span class="rzs" id="rzStat">ยังไม่ได้ตั้งค่า</span>
       </div>
-      <pre>npm i @distube/ytdl-core
-# แล้วรัน node script เล็ก ๆ เสิร์ฟไฟล์เสียง
-# หรือใช้ yt-dlp:
-yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
-# แล้วลากไฟล์ song.m4a เข้ามาที่นี่</pre>
-    </details>
-  </div>
+    </div>
+    <div class="hint" style="margin-top:9px">
+      YouTube/SoundCloud ดึงจากเบราว์เซอร์ตรง ๆ ไม่ได้ (ติด CORS + ลายเซ็นลิงก์) —
+      ต้องมีตัวแปลงฝั่งเซิร์ฟเวอร์ ถ้าไม่มี ระบบจะขึ้นวิธีทำพร้อมคำสั่งให้คัดลอก
+    </div>
+  </details>
 </div>
 
 <!-- ═══ STUDIO ═══ -->
@@ -389,6 +568,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
   <!-- waveform + meters -->
   <div class="card">
+    <div class="rail" id="rail"></div>
     <div class="track">
       <div class="tart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -398,26 +578,26 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
         <div class="tmeta" id="tmeta"></div>
       </div>
       <div class="abt">
-        <button data-ab="A" class="on">A · ORIG</button>
-        <button data-ab="B">B · PROC</button>
+        <button data-ab="A" class="on">A · ต้นฉบับ</button>
+        <button data-ab="B">B · ปรับแล้ว</button>
       </div>
     </div>
 
     <div class="wbox" id="wbox">
       <canvas id="wave"></canvas>
-      <div class="whint">ลากแท็บ IN/OUT · คลิกเพื่อเลื่อน</div>
+      <div class="whint">ลากแท็บ เข้า/ออก · คลิกเพื่อเลื่อนตำแหน่ง</div>
     </div>
 
     <div class="scope">
       <div class="spec"><canvas id="spec"></canvas></div>
       <div class="meters">
         <div class="mrow">
-          <span class="mlab">PEAK</span>
+          <span class="mlab">พีค</span>
           <div class="mbar"><div class="mfill pk" id="mPeak"></div></div>
           <span class="mval" id="vPeak">-∞</span>
         </div>
         <div class="mrow">
-          <span class="mlab">RMS</span>
+          <span class="mlab">เฉลี่ย</span>
           <div class="mbar"><div class="mfill rm" id="mRms"></div></div>
           <span class="mval" id="vRms">-∞</span>
         </div>
@@ -442,8 +622,8 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
       </button>
       <div class="time" id="time">00:00.00 <em>/ 00:00.00</em></div>
       <div class="trim">
-        <div class="ti"><span>IN</span><input type="number" id="tIn" value="0" step="0.01" min="0"><button data-set="in">SET</button></div>
-        <div class="ti"><span>OUT</span><input type="number" id="tOut" value="0" step="0.01" min="0"><button data-set="out">SET</button></div>
+        <div class="ti"><span>เข้า</span><input type="number" id="tIn" value="0" step="0.01" min="0"><button data-set="in">ตั้ง</button></div>
+        <div class="ti"><span>ออก</span><input type="number" id="tOut" value="0" step="0.01" min="0"><button data-set="out">ตั้ง</button></div>
       </div>
     </div>
   </div>
@@ -453,9 +633,9 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
     <div class="ch">
       <div class="ct">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
-        6-Band EQ <b>±18 dB</b>
+        อีคิว 6 ช่วง <b>±18 dB</b>
       </div>
-      <button class="btn bg bsm" id="eqFlat">FLAT</button>
+      <button class="btn bg bsm" id="eqFlat">แบน</button>
     </div>
     <div class="eq" id="eqBands"></div>
   </div>
@@ -465,7 +645,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
     <div class="ch">
       <div class="ct">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M2 12h3l2-7 3 14 3-11 2 6h7"/></svg>
-        Dynamics &amp; Space
+        ไดนามิก &amp; มิติเสียง
       </div>
     </div>
 
@@ -484,7 +664,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
     <div class="fxg">
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Rate</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>ความเร็ว</div>
           <div class="fv" id="vRate">1.00×</div>
         </div>
         <input type="range" id="sRate" min="0.5" max="2" step="0.01" value="1">
@@ -493,7 +673,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>Gain</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>ระดับเสียง</div>
           <div class="fv" id="vGain">0.0 dB</div>
         </div>
         <input type="range" id="sGain" min="-20" max="30" step="0.5" value="0">
@@ -502,24 +682,24 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>Width</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>ความกว้าง</div>
           <div class="fv" id="vWidth">100%</div>
         </div>
         <input type="range" id="sWidth" min="0" max="200" step="1" value="100">
-        <div class="rsc"><span>Mono</span><span>Normal</span><span>Wide</span></div>
+        <div class="rsc"><span>โมโน</span><span>ปกติ</span><span>กว้าง</span></div>
       </div>
 
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 2v20M6 8v8M18 6v12"/></svg>Compressor</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 2v20M6 8v8M18 6v12"/></svg>ตัวบีบอัด</div>
           <div class="fv" id="vComp">-14 dB</div>
         </div>
         <input type="range" id="sCompT" min="-40" max="0" step="1" value="-14">
-        <div class="rsc"><span>-40</span><span>Threshold</span><span>0</span></div>
+        <div class="rsc"><span>-40</span><span>จุดเริ่มบีบ</span><span>0</span></div>
         <div class="dsub">
           <div class="fx" style="border:0;background:rgba(255,255,255,.025)">
             <div class="ftop" style="margin-bottom:6px">
-              <div class="fl" style="font-size:10.5px">Ratio</div>
+              <div class="fl" style="font-size:10.5px">อัตราบีบ</div>
               <div class="fv" id="vRatio">4:1</div>
             </div>
             <input type="range" id="sRatio" min="1" max="20" step="1" value="4">
@@ -529,15 +709,15 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 18l6-6 4 4 8-8"/></svg>Reverb</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 18l6-6 4 4 8-8"/></svg>เสียงสะท้อน</div>
           <div class="fv" id="vRev">0%</div>
         </div>
         <input type="range" id="sRev" min="0" max="100" step="1" value="0">
-        <div class="rsc"><span>Dry</span><span>Mix</span><span>Wet</span></div>
+        <div class="rsc"><span>แห้ง</span><span>ผสม</span><span>เปียก</span></div>
         <div class="dsub">
           <div class="fx" style="border:0;background:rgba(255,255,255,.025)">
             <div class="ftop" style="margin-bottom:6px">
-              <div class="fl" style="font-size:10.5px">Size</div>
+              <div class="fl" style="font-size:10.5px">ขนาดห้อง</div>
               <div class="fv" id="vRoom">1.8 s</div>
             </div>
             <input type="range" id="sRoom" min="0.3" max="6" step="0.1" value="1.8">
@@ -547,14 +727,14 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
       <div class="fx">
         <div class="ftop">
-          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 18l6-6 4 4 8-8"/></svg>Fade</div>
+          <div class="fl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 18l6-6 4 4 8-8"/></svg>เฟด</div>
           <div class="fv" id="vFade">0 / 0 ms</div>
         </div>
         <div style="display:flex;gap:7px">
           <input type="range" id="sFi" min="0" max="3000" step="50" value="0" style="flex:1">
           <input type="range" id="sFo" min="0" max="3000" step="50" value="0" style="flex:1">
         </div>
-        <div class="rsc"><span>in</span><span>0–3000 ms</span><span>out</span></div>
+        <div class="rsc"><span>เข้า</span><span>0–3000 ms</span><span>ออก</span></div>
         <label class="sw"><input type="checkbox" id="cNorm" checked><span class="swt"></span> Normalize −1 dBFS</label>
         <label class="sw"><input type="checkbox" id="cClip" checked><span class="swt"></span> Soft-clip (สำรองเมื่อปิด Maximizer)</label>
       </div>
@@ -566,7 +746,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
     <div class="ch">
       <div class="ct">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg>
-        Maximizer <b>lookahead limiter</b>
+        ดันความดัง <b>ลิมิตเตอร์มองล่วงหน้า</b>
       </div>
       <label class="sw" style="margin:0">
         <input type="checkbox" id="cMx" checked><span class="swt"></span> เปิด
@@ -582,11 +762,11 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
           <option value="-9" selected>−9 LUFS · ดังมาก</option>
           <option value="-7">−7 LUFS · สุดขีด</option>
           <option value="-5">−5 LUFS · ทำลายล้าง</option>
-          <option value="0">Manual · ใช้ Drive เอง</option>
+          <option value="0">กำหนดเอง · ใช้แรงขับ</option>
         </select>
       </div>
       <div class="mxcell">
-        <label>เพดาน (Ceiling)</label>
+        <label>เพดานเสียง</label>
         <select id="mxCeil">
           <option value="-3">−3.0 dBTP</option>
           <option value="-1.5">−1.5 dBTP</option>
@@ -601,23 +781,23 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
       <div class="ftop">
         <div class="fl">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 17l4-6 3 3 5-7 4 4"/></svg>
-          Drive (บีบเข้า limiter)
+          แรงขับ (ดันเข้า Limiter)
         </div>
-        <div class="fv" id="vDrive">auto</div>
+        <div class="fv" id="vDrive">อัตโนมัติ</div>
       </div>
       <input type="range" id="sDrive" min="-12" max="36" step="0.5" value="0" disabled>
       <div class="rsc"><span>−12 dB</span><span>+18</span><span>+36 dB</span></div>
       <div class="dsub">
         <div class="fx" style="border:0;background:rgba(255,255,255,.025)">
           <div class="ftop" style="margin-bottom:6px">
-            <div class="fl" style="font-size:10.5px">Release</div>
+            <div class="fl" style="font-size:10.5px">การคืนตัว</div>
             <div class="fv" id="vRel">120 ms</div>
           </div>
           <input type="range" id="sRel" min="30" max="400" step="10" value="120">
         </div>
         <div class="fx" style="border:0;background:rgba(255,255,255,.025)">
           <div class="ftop" style="margin-bottom:6px">
-            <div class="fl" style="font-size:10.5px">Lookahead</div>
+            <div class="fl" style="font-size:10.5px">มองล่วงหน้า</div>
             <div class="fv" id="vLa">5 ms</div>
           </div>
           <input type="range" id="sLa" min="1" max="20" step="0.5" value="5">
@@ -657,7 +837,7 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
     <div class="er">
       <div class="sl">
-        <label id="qLab">Bitrate</label>
+        <label id="qLab">ความละเอียด</label>
         <select id="qSel">
           <option value="128">128 kbps</option>
           <option value="192">192 kbps</option>
@@ -686,12 +866,12 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
     <div class="res" id="res">
       <div class="rin">
         <div class="rt">
-          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>สำเร็จ</h3>
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>เสร็จเรียบร้อย</h3>
           <div class="rf" id="resFile">—</div>
         </div>
         <div class="stats">
           <div class="st">ขนาด<b id="stSize">—</b></div>
-          <div class="st">Peak<b id="stPeak">—</b></div>
+          <div class="st">พีค<b id="stPeak">—</b></div>
           <div class="st">ยาว<b id="stDur">—</b></div>
         </div>
         <a class="btn bok" id="dl" download>ดาวน์โหลด</a>
@@ -702,15 +882,24 @@ yt-dlp -f "ba[ext=m4a]" -o "song.%(ext)s" "URL"
 
 <footer>
   <div>
-    <kbd>Space</kbd> เล่น/หยุด · <kbd>←</kbd><kbd>→</kbd> เลื่อน · <kbd>I</kbd> IN · <kbd>O</kbd> OUT ·
-    <kbd>B</kbd> A/B · <kbd>R</kbd> เรนเดอร์
+    <kbd>เว้นวรรค</kbd> เล่น/หยุด · <kbd>←</kbd><kbd>→</kbd> เลื่อน · <kbd>I</kbd> จุดเข้า · <kbd>O</kbd> จุดออก ·
+    <kbd>B</kbd> เทียบเสียง · <kbd>R</kbd> เรนเดอร์
   </div>
   <div style="margin-top:7px">ทำงานในเบราว์เซอร์ 100% · ไม่มีไฟล์ออกจากเครื่อง</div>
+  <div class="fcred">by <b>vex555555555555</b> · by <b>มาร์ช</b></div>
 </footer>
 </div>
 
 <div class="ov" id="ov"><div class="ovb"><div class="ring"></div><div class="ovt" id="ovT">กำลังทำงาน...</div><div class="ovs" id="ovS"></div></div></div>
 <div class="ts" id="ts"></div>
+
+<div class="hlp" id="hlp">
+  <div class="hlpb">
+    <div class="hlph"><b id="hlpT">ลิงก์นี้ดึงในเบราว์เซอร์ไม่ได้</b><button id="hlpX" aria-label="ปิด">✕</button></div>
+    <div class="hlpw" id="hlpW"></div>
+    <div id="hlpB"></div>
+  </div>
+</div>
 
 <script type="module">
 /* ══════════════════════════════════════════════════════════════
@@ -738,6 +927,7 @@ const SR = 44100;
 /* ── state ── */
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 let buf = null, peaks = null;
+let tracks = [], activeIdx = -1;
 let src = null, playing = false, playAt = 0, offset = 0, loop = false, raf = 0;
 let fmt = 'mp3', lastUrl = null, drag = null, hovX = -1, ab = 'B', lastRate = 1;
 let encMod = null, revIR = null, irKey = '';
@@ -854,110 +1044,428 @@ function prog(p, s) {
   if (s) $('pStage').textContent = s;
 }
 
-/* tabs */
-document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
-  document.querySelectorAll('.pane').forEach(x => x.classList.remove('on'));
-  t.classList.add('on');
-  $('p' + t.dataset.p).classList.add('on');
-});
-
 /* ══════════ IMPORT ══════════ */
 const drop = $('drop'), fileIn = $('fileIn');
 drop.onclick = () => fileIn.click();
 ['dragenter','dragover'].forEach(e => drop.addEventListener(e, v => { v.preventDefault(); drop.classList.add('ov'); }));
 ['dragleave','drop'].forEach(e => drop.addEventListener(e, v => { v.preventDefault(); drop.classList.remove('ov'); }));
-drop.addEventListener('drop', e => { const f = e.dataTransfer.files?.[0]; if (f) readFile(f); });
-fileIn.onchange = e => { if (e.target.files[0]) readFile(e.target.files[0]); };
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files; if (f?.length) readFiles(f); });
+fileIn.onchange = e => { if (e.target.files.length) readFiles(e.target.files); };
 window.addEventListener('dragover', e => e.preventDefault());
 window.addEventListener('drop', e => {
   e.preventDefault();
-  const f = e.dataTransfer?.files?.[0];
-  if (f && !$('studio').contains(e.target)) readFile(f);
+  const f = e.dataTransfer?.files;
+  if (f?.length && !$('studio').contains(e.target)) readFiles(f);
 });
 
-async function readFile(f) {
-  const okExt = /\.(mp3|wav|ogg|oga|flac|m4a|aac|opus|webm)$/i.test(f.name);
-  if (!f.type.startsWith('audio/') && !okExt) return toast('ไม่ใช่ไฟล์เสียง', 'err');
-  ov(true, 'กำลังถอดรหัส...', f.name);
-  try {
-    await decode(await f.arrayBuffer(), f.name);
-  } catch (e) { ov(false); toast('ถอดรหัสไม่ได้: ' + e.message, 'err'); }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function readFiles(files) {
+  const list = [...files].filter(f =>
+    f.type.startsWith('audio/') || /\.(mp3|wav|ogg|oga|flac|m4a|aac|opus|webm)$/i.test(f.name));
+  if (!list.length) return toast('ไม่ใช่ไฟล์เสียง', 'err');
+
+  for (let i = 0; i < list.length; i++) {
+    ov(true, `กำลังถอดรหัส ${i+1}/${list.length}`, list[i].name);
+    try { await addTrack(await list[i].arrayBuffer(), list[i].name); }
+    catch (e) { toast('ข้าม ' + list[i].name + ' — ' + e.message, 'err'); }
+  }
+  ov(false);
+  if (tracks.length) {
+    activate(tracks.length - 1);
+    $('studio').scrollIntoView({ behavior:'smooth', block:'start' });
+    toast('โหลด ' + list.length + ' ไฟล์ · ' + ft(buf.duration), 'ok');
+  }
 }
 
+async function addTrack(ab, name) {
+  const b = await ctx.decodeAudioData(ab.slice(0));
+  tracks.push({ name, buf: b, peaks: makePeaks(b), bytes: ab.byteLength });
+  $('studio').style.display = 'block';
+  $('importCard').style.display = 'none';
+  renderRail();
+  return b;
+}
+
+function activate(i) {
+  if (i < 0 || i >= tracks.length) return;
+  activeIdx = i;
+  const t = tracks[i];
+  buf = t.buf; peaks = t.peaks;
+
+  $('tname').textContent = t.name;
+  $('tmeta').innerHTML =
+    `<span class="cm">${ft(buf.duration)}</span>` +
+    `<span class="cm">${buf.numberOfChannels} ch</span>` +
+    `<span class="cm">${buf.sampleRate} Hz</span>` +
+    `<span class="cm">${fb(t.bytes)}</span>`;
+
+  $('tIn').value = '0';  $('tIn').max = buf.duration.toFixed(2);
+  $('tOut').value = buf.duration.toFixed(2); $('tOut').max = buf.duration.toFixed(2);
+  $('fname').value = (t.name.replace(/\.[^.]+$/, '') || 'aura-master').slice(0, 56);
+
+  stop(true); offset = 0;
+  updTime(0); draw(); startMeters();
+  renderRail();
+}
+
+function renderRail() {
+  const r = $('rail');
+  r.innerHTML = tracks.map((t, i) =>
+    `<div class="tk${i === activeIdx ? ' on' : ''}" data-i="${i}">` +
+      `<span class="dot"></span><span class="nm">${esc(t.name)}</span>` +
+      `<span class="du">${ft(t.buf.duration)}</span></div>`
+  ).join('') + `<div class="tk add" id="railAdd">＋ เพิ่มไฟล์</div>`;
+
+  r.querySelectorAll('[data-i]').forEach(el => el.onclick = () => activate(+el.dataset.i));
+  $('railAdd').onclick = () => fileIn.click();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UNIVERSAL LINK RESOLVER
+   รับลิงก์อะไรก็ได้ → จำแนกโฮสต์ → เลือกช่องทางที่ทำงานได้จริง
+   ══════════════════════════════════════════════════════════════ */
+
+const RZ_KEY = 'aura.resolver.v2';
+const rz = (() => {
+  try { return Object.assign({ url: '', key: '' }, JSON.parse(localStorage.getItem(RZ_KEY) || '{}')); }
+  catch { return { url: '', key: '' }; }
+})();
+const rzSaveCfg = () => { try { localStorage.setItem(RZ_KEY, JSON.stringify(rz)); } catch {} };
+
+const PLATFORMS = [
+  ['youtube',    /(?:^|\.)(?:youtube\.com|youtu\.be)$/i,        'YouTube'],
+  ['soundcloud', /(?:^|\.)soundcloud\.com$/i,                    'SoundCloud'],
+  ['tiktok',     /(?:^|\.)tiktok\.com$/i,                        'TikTok'],
+  ['facebook',   /(?:^|\.)(?:facebook\.com|fb\.watch|fb\.me)$/i, 'Facebook'],
+  ['instagram',  /(?:^|\.)instagram\.com$/i,                     'Instagram'],
+  ['twitter',    /(?:^|\.)(?:twitter\.com|x\.com|t\.co)$/i,      'X'],
+  ['spotify',    /(?:^|\.)spotify\.com$/i,                       'Spotify'],
+  ['bilibili',   /(?:^|\.)(?:bilibili\.com|b23\.tv)$/i,          'Bilibili'],
+  ['vimeo',      /(?:^|\.)vimeo\.com$/i,                         'Vimeo'],
+  ['twitch',     /(?:^|\.)twitch\.tv$/i,                         'Twitch'],
+  ['mega',       /(?:^|\.)mega\.nz$/i,                           'MEGA'],
+];
+const NEEDS_RESOLVER = new Set(['youtube','soundcloud','tiktok','facebook','instagram','twitter','spotify','bilibili','vimeo','twitch']);
+
+function hostOf(u) {
+  try { return new URL(/^https?:\/\//i.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, '').toLowerCase(); }
+  catch { return ''; }
+}
+function classify(u) {
+  const h = hostOf(u);
+  for (const [id, re, th] of PLATFORMS) if (re.test(h)) return { id, th, host: h };
+  return { id: 'direct', th: 'ไฟล์ตรง', host: h };
+}
+
+function normalize(raw) {
+  let u = raw.trim();
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+
+  const gd = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^#]*?id=)([\w-]{10,})/)
+          || u.match(/drive\.google\.com\/[^#]*[?&]id=([\w-]{10,})/);
+  if (gd) return { url: 'https://drive.google.com/uc?export=download&id=' + gd[1], kind: 'gdrive', id: gd[1] };
+
+  if (/dropbox\.com/i.test(u)) {
+    u = u.replace(/([?&])dl=0/, '$1dl=1');
+    if (!/[?&]dl=1/.test(u)) u += (u.includes('?') ? '&' : '?') + 'dl=1';
+    return { url: u, kind: 'plain' };
+  }
+  if (/(?:1drv\.ms|onedrive\.live\.com)/i.test(u))
+    return { url: u + (u.includes('?') ? '&' : '?') + 'download=1', kind: 'plain' };
+
+  const gh = u.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+  if (gh) return { url: `https://raw.githubusercontent.com/${gh[1]}/${gh[2]}/${gh[3]}`, kind: 'plain' };
+
+  return { url: u, kind: 'plain' };
+}
+
+/* ตรวจหัวไฟล์จริง — กันกรณีพร็อกซี่ส่งหน้าเว็บ/JSON กลับมาแทนเสียง */
+function sniff(ab) {
+  const b = new Uint8Array(ab);
+  if (b.length < 64) return { ok: false, why: 'ไฟล์สั้นเกินไป (' + b.length + ' ไบต์)' };
+  const s = (i, n) => { let o = ''; for (let k = i; k < i + n && k < b.length; k++) o += String.fromCharCode(b[k]); return o; };
+  if (s(0,3) === 'ID3') return { ok: true, ext: 'mp3' };
+  if (s(0,4) === 'OggS') return { ok: true, ext: 'ogg' };
+  if (s(0,4) === 'fLaC') return { ok: true, ext: 'flac' };
+  if (s(0,4) === 'RIFF' && s(8,4) === 'WAVE') return { ok: true, ext: 'wav' };
+  if (s(4,4) === 'ftyp') return { ok: true, ext: 'm4a' };
+  if (b[0] === 0x1A && b[1] === 0x45 && b[2] === 0xDF && b[3] === 0xA3) return { ok: true, ext: 'webm' };
+  if (b[0] === 0xFF && (b[1] & 0xE0) === 0xE0) return { ok: true, ext: 'mp3' };
+
+  const head = s(0, 300).trim().toLowerCase();
+  if (head.startsWith('<!doctype') || head.startsWith('<html') || head.startsWith('<?xml') || head.startsWith('<head'))
+    return { ok: false, why: 'ได้หน้าเว็บกลับมา ไม่ใช่ไฟล์เสียง', html: true };
+  if (head.startsWith('{') || head.startsWith('['))
+    return { ok: false, why: 'ได้ข้อมูล JSON กลับมา ไม่ใช่ไฟล์เสียง' };
+  return { ok: false, why: 'ไม่รู้จักรูปแบบไฟล์' };
+}
+
+async function getBytes(url, ms = 60000) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms);
+  try {
+    const r = await fetch(url, { mode: 'cors', redirect: 'follow', signal: ac.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const ab = await r.arrayBuffer();
+    if (ab.byteLength < 512) throw new Error('ได้ข้อมูลว่าง');
+    return ab;
+  } finally { clearTimeout(t); }
+}
+
+const PROXIES = [
+  { n: 'เชื่อมตรง',       f: u => u },
+  { n: 'พร็อกซี่ CORS',   f: u => 'https://cors.eu.org/' + u },
+  { n: 'พร็อกซี่สำรอง',  f: u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u) },
+];
+
+function driveConfirm(html, id) {
+  const g = (re) => (html.match(re) || [])[1];
+  const uuid = g(/name="uuid"[^>]*value="([^"]+)"/i) || g(/value="([^"]+)"[^>]*name="uuid"/i);
+  const conf = g(/name="confirm"[^>]*value="([^"]+)"/i) || 't';
+  if (!uuid) return null;
+  return `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=${conf}&uuid=${uuid}`;
+}
+
+async function fetchAudio(target, kind, id) {
+  let last = null;
+  for (let i = 0; i < PROXIES.length; i++) {
+    const p = PROXIES[i];
+    try {
+      $('ovS').textContent = `ช่องทาง ${i+1}/${PROXIES.length} · ${p.n}`;
+      const ab = await getBytes(p.f(target));
+      const sn = sniff(ab);
+      if (sn.ok) return { ab, ext: sn.ext };
+
+      if (kind === 'gdrive' && sn.html) {
+        const next = driveConfirm(new TextDecoder().decode(new Uint8Array(ab).subarray(0, 80000)), id);
+        if (next) {
+          $('ovS').textContent = `ช่องทาง ${i+1}/${PROXIES.length} · ยืนยันไฟล์ใหญ่ใน Drive`;
+          const ab2 = await getBytes(p.f(next), 180000);
+          const sn2 = sniff(ab2);
+          if (sn2.ok) return { ab: ab2, ext: sn2.ext };
+          last = new Error(sn2.why);
+          continue;
+        }
+      }
+      last = new Error(sn.why);
+    } catch (e) { last = e; }
+  }
+  throw last || new Error('ดึงไม่ได้');
+}
+
+async function resolveMediafire(pageUrl) {
+  for (const p of PROXIES) {
+    try {
+      const r = await fetch(p.f(pageUrl), { mode: 'cors' });
+      if (!r.ok) continue;
+      const txt = await r.text();
+      const m = txt.match(/href="(https:\/\/download[^"]*?mediafire\.com\/[^"]+)"/i)
+             || txt.match(/id="downloadButton"[^>]*?href="([^"]+)"/i);
+      if (m) return m[1].replace(/&amp;/g, '&');
+    } catch {}
+  }
+  return null;
+}
+
+async function viaCobalt(target) {
+  const base = (rz.url || '').trim().replace(/\/+$/, '');
+  if (!base) throw new Error('ยังไม่ได้ตั้งค่าเซิร์ฟเวอร์แปลง');
+  const h = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+  if (rz.key) h['Authorization'] = 'Api-Key ' + rz.key.trim();
+
+  const r = await fetch(base + '/', {
+    method: 'POST', headers: h,
+    body: JSON.stringify({ url: target, downloadMode: 'audio', audioFormat: 'mp3', audioBitrate: '320' }),
+  });
+  let j;
+  try { j = await r.json(); } catch { throw new Error('เซิร์ฟเวอร์ตอบกลับผิดรูปแบบ'); }
+
+  if (j.status === 'tunnel' || j.status === 'redirect') return j.url;
+  if (j.status === 'picker' && j.picker?.length) return j.picker[0].url;
+
+  const code = j.error?.code || ('HTTP ' + r.status);
+  const th = {
+    'error.api.auth.jwt.missing':   'เซิร์ฟเวอร์นี้ต้องใช้ API key',
+    'error.api.auth.jwt.invalid':   'API key ไม่ถูกต้อง',
+    'error.api.auth.key.missing':   'เซิร์ฟเวอร์นี้ต้องใช้ API key',
+    'error.api.auth.key.invalid':   'API key ไม่ถูกต้อง',
+    'error.api.link.invalid':       'เซิร์ฟเวอร์ไม่รองรับลิงก์นี้',
+    'error.api.rate_exceeded':      'เรียกถี่เกินไป รอสักครู่',
+    'error.api.content.video.unavailable': 'คลิปนี้ถูกจำกัดสิทธิ์',
+  };
+  throw new Error(th[code] || code);
+}
+
+function fileName(u, ext) {
+  let base = 'audio';
+  try { base = decodeURIComponent(new URL(u).pathname.split('/').pop() || '') || 'audio'; } catch {}
+  base = base.replace(/[\\/:*?"<>|]+/g, '_').slice(0, 70) || 'audio';
+  if (!/\.[a-z0-9]{2,5}$/i.test(base)) base += '.' + ext;
+  return base;
+}
+
+/* ── help sheet ── */
+const CMD = {
+  youtube:   'yt-dlp -x --audio-format mp3 --audio-quality 0 "%U%"',
+  soundcloud:'yt-dlp -x --audio-format mp3 --audio-quality 0 "%U%"',
+  tiktok:    'yt-dlp -x --audio-format mp3 "%U%"',
+  facebook:  'yt-dlp -x --audio-format mp3 "%U%"',
+  instagram: 'yt-dlp -x --audio-format mp3 "%U%"',
+  twitter:   'yt-dlp -x --audio-format mp3 "%U%"',
+  bilibili:  'yt-dlp -x --audio-format mp3 "%U%"',
+  vimeo:     'yt-dlp -x --audio-format mp3 "%U%"',
+  twitch:    'yt-dlp -x --audio-format mp3 "%U%"',
+  spotify:   '# Spotify ไม่มีไฟล์เสียงให้ดึง — ใช้ชื่อเพลงไปค้นใน YouTube แทน',
+  mega:      'mega-get "%U%" ./',
+  direct:    'curl -L -o audio.mp3 "%U%"',
+};
+
+function helpSheet(id, raw, why) {
+  const row = PLATFORMS.find(p => p[0] === id);
+  const th = row ? row[2] : 'ลิงก์นี้';
+  const cmd = (CMD[id] || CMD.direct).replace(/%U%/g, raw);
+
+  $('hlpT').textContent = th + ' — ดึงในเบราว์เซอร์ไม่ได้';
+  $('hlpW').innerHTML =
+    (why ? `<b>สาเหตุ:</b> ${esc(why)}<br>` : '') +
+    (id === 'mega'
+      ? 'MEGA เข้ารหัสไฟล์ไว้และถอดกุญแจในเบราว์เซอร์ ต้องใช้โปรแกรมช่วย'
+      : 'เว็บพวกนี้บล็อกการดึงไฟล์ข้ามโดเมน (CORS) และลิงก์เสียงมีลายเซ็นที่หมดอายุเร็ว '
+        + 'เบราว์เซอร์จึงดึงตรงไม่ได้ — ต้องผ่านตัวแปลงฝั่งเซิร์ฟเวอร์');
+
+  $('hlpB').innerHTML =
+    `<div class="hlpk">ทางที่ 1 · เปิดตัวแปลงของตัวเอง — ใช้ได้ทุกครั้ง</div>
+     <ol class="hlpsteps">
+       <li>รันคำสั่งนี้บนเครื่องหรือเซิร์ฟเวอร์ที่มี Docker</li>
+       <li>เอา <b>http://localhost:9000</b> ไปใส่ใน “ตั้งค่าตัวแปลงลิงก์” ด้านบน แล้วกดบันทึก</li>
+       <li>กดดึงลิงก์เดิมอีกครั้ง — YouTube / SoundCloud / TikTok ใช้ได้หมด</li>
+     </ol>
+     <pre><i>คัดลอก</i><code>docker run -d --name cobalt -p 9000:9000 ghcr.io/imputnet/cobalt:latest</code></pre>
+     <div class="hlpk">ทางที่ 2 · ดาวน์โหลดในเครื่องแล้วลากไฟล์มาวาง</div>
+     <pre><i>คัดลอก</i><code>${esc(cmd)}</code></pre>
+     <div class="hint" style="margin-top:12px">
+       โหลดเสร็จแล้วลากไฟล์ลงช่องด้านบนได้เลย — ไฟล์ไม่ถูกส่งไปที่ไหน ประมวลผลในเครื่อง 100%
+     </div>`;
+
+  $('hlpB').querySelectorAll('pre i').forEach(b => {
+    b.onclick = async () => {
+      const txt = b.parentElement.querySelector('code').textContent;
+      try { await navigator.clipboard.writeText(txt); b.textContent = 'คัดลอกแล้ว'; }
+      catch { b.textContent = 'กด Ctrl+C'; }
+      setTimeout(() => { b.textContent = 'คัดลอก'; }, 1600);
+    };
+  });
+  $('hlp').classList.add('on');
+}
+
+$('hlpX').onclick = () => $('hlp').classList.remove('on');
+$('hlp').onclick = e => { if (e.target === $('hlp')) $('hlp').classList.remove('on'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('hlp').classList.remove('on'); });
+
+/* ── settings wiring ── */
+$('rzUrl').value = rz.url;
+$('rzKey').value = rz.key;
+const rzStat = (t, k = '') => { const e = $('rzStat'); e.textContent = t; e.className = 'rzs ' + k; };
+if (rz.url) rzStat('บันทึกไว้แล้ว · ' + hostOf(rz.url), 'ok');
+
+$('rzSave').onclick = () => {
+  rz.url = $('rzUrl').value.trim();
+  rz.key = $('rzKey').value.trim();
+  rzSaveCfg();
+  rzStat(rz.url ? 'บันทึกแล้ว · ' + hostOf(rz.url) : 'ล้างค่าแล้ว', rz.url ? 'ok' : '');
+  toast(rz.url ? 'บันทึกตัวแปลงลิงก์แล้ว' : 'ล้างค่าตัวแปลงแล้ว', 'ok');
+};
+
+$('rzTest').onclick = async () => {
+  const u = $('rzUrl').value.trim();
+  if (!u) return rzStat('ใส่ที่อยู่ก่อน', 'err');
+  rzStat('กำลังทดสอบ...');
+  const old = { url: rz.url, key: rz.key };
+  rz.url = u; rz.key = $('rzKey').value.trim();
+  try {
+    const link = await viaCobalt('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+    rzStat('เชื่อมได้ · ' + (hostOf(link) || 'ok'), 'ok');
+  } catch (e) {
+    rzStat('ไม่ผ่าน — ' + e.message, 'err');
+  } finally { rz.url = old.url; rz.key = old.key; }
+};
+
+/* ── main entry ── */
 $('fetchBtn').onclick = () => {
   const u = $('urlIn').value.trim();
   if (u) loadUrl(u); else toast('ใส่ลิงก์ก่อน', 'err');
 };
 $('urlIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('fetchBtn').click(); });
 
-async function loadUrl(url) {
-  if (/(?:youtube\.com|youtu\.be)/i.test(url)) {
-    return toast('YouTube ต้องใช้ resolver ในเครื่อง — ดูวิธีใน "ลิงก์" tab', 'err');
-  }
-  ov(true, 'กำลังดึงเสียง...', url.slice(0, 70));
-  const tries = [
-    url,
-    'https://corsproxy.io/?url=' + encodeURIComponent(url),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-  ];
-  let ab = null, err = null;
-  for (const t of tries) {
-    try {
-      const r = await fetch(t, { mode: 'cors' });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const b = await r.arrayBuffer();
-      if (b.byteLength < 2048) throw new Error('ไฟล์เล็กเกินไป');
-      ab = b; break;
-    } catch (e) { err = e; }
-  }
-  if (!ab) { ov(false); return toast('ดึงไม่ได้: ' + (err?.message || 'CORS') + ' — ลองอัปโหลดไฟล์เอง', 'err'); }
-  const name = decodeURIComponent((url.split('/').pop() || 'audio').split('?')[0]);
-  try { await decode(ab, name); }
-  catch (e) { ov(false); toast('ถอดรหัสไม่ได้: ' + e.message, 'err'); }
-}
+async function loadUrl(raw) {
+  const c = classify(raw);
+  const n = normalize(raw);
+  ov(true, 'กำลังดึงเพลง...', c.th + (c.host && c.host !== 'ไฟล์ตรง' ? ' · ' + c.host : ''));
 
-async function decode(ab, name) {
-  buf = await ctx.decodeAudioData(ab.slice(0));
-  buildPeaks();
-  $('studio').style.display = 'block';
-  $('tname').textContent = name;
-  $('tmeta').innerHTML =
-    `<span class="cm">${ft(buf.duration)}</span>` +
-    `<span class="cm">${buf.numberOfChannels} ch</span>` +
-    `<span class="cm">${buf.sampleRate} Hz</span>` +
-    `<span class="cm">${fb(ab.byteLength)}</span>`;
-  $('tIn').value = '0'; $('tIn').max = buf.duration.toFixed(2);
-  $('tOut').value = buf.duration.toFixed(2); $('tOut').max = buf.duration.toFixed(2);
-  $('fname').value = (name.replace(/\.[^.]+$/, '') || 'aura-master').slice(0, 56);
-  stop(true); offset = 0;
-  updTime(0); draw(); startMeters();
-  ov(false);
-  $('studio').scrollIntoView({ behavior:'smooth', block:'start' });
-  $('importCard').style.display = 'none';
-  toast('โหลดแล้ว · ' + ft(buf.duration), 'ok');
+  let got = null;
+  try {
+    if (c.id === 'mega') { ov(false); return helpSheet('mega', raw, 'ไฟล์ถูกเข้ารหัสตั้งแต่ต้นทาง'); }
+
+    if (NEEDS_RESOLVER.has(c.id)) {
+      if (!rz.url.trim()) { ov(false); return helpSheet(c.id, raw, 'ยังไม่ได้ตั้งค่าเซิร์ฟเวอร์แปลง'); }
+      $('ovS').textContent = c.th + ' · ผ่านเซิร์ฟเวอร์แปลง';
+      const direct = await viaCobalt(raw);
+      $('ovS').textContent = c.th + ' · กำลังดาวน์โหลดเสียง';
+      const ab = await getBytes(direct, 180000);
+      const sn = sniff(ab);
+      if (!sn.ok) throw new Error(sn.why);
+      got = { ab, ext: sn.ext };
+    } else if (/mediafire\.com$/i.test(c.host)) {
+      $('ovS').textContent = 'MediaFire · กำลังหาไฟล์จริง';
+      const direct = await resolveMediafire(n.url);
+      if (!direct) throw new Error('หาไฟล์ในหน้า MediaFire ไม่เจอ');
+      got = await fetchAudio(direct, 'plain', null);
+    } else {
+      got = await fetchAudio(n.url, n.kind, n.id);
+    }
+  } catch (e) {
+    ov(false);
+    if (NEEDS_RESOLVER.has(c.id)) return helpSheet(c.id, raw, e.message);
+    return toast('ดึงไม่ได้ — ' + e.message, 'err');
+  }
+
+  const name = fileName(n.url, got.ext);
+  try {
+    await addTrack(got.ab, name);
+    activate(tracks.length - 1);
+    ov(false);
+    $('studio').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('โหลดแล้ว · ' + ft(buf.duration) + ' · ' + name, 'ok');
+  } catch (e) {
+    ov(false);
+    toast('ได้ไฟล์ ' + got.ext.toUpperCase() + ' มาแล้ว แต่เบราว์เซอร์ถอดรหัสไม่ได้', 'err');
+  }
 }
 
 /* ══════════ PEAKS + WAVEFORM ══════════ */
 const cvs = $('wave'), g = cvs.getContext('2d'), wbox = $('wbox');
 
-function buildPeaks(n = 2600) {
-  const c0 = buf.getChannelData(0);
-  const c1 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : null;
+function makePeaks(b, n = 2600) {
+  const c0 = b.getChannelData(0);
+  const c1 = b.numberOfChannels > 1 ? b.getChannelData(1) : null;
   const cnt = Math.min(n, c0.length);
   const step = c0.length / cnt;
-  peaks = new Float32Array(cnt);
+  const out = new Float32Array(cnt);
   for (let i = 0; i < cnt; i++) {
-    const a = Math.floor(i*step), b = Math.min(Math.floor((i+1)*step), c0.length);
+    const a = Math.floor(i*step), e2 = Math.min(Math.floor((i+1)*step), c0.length);
     let m = 0;
-    for (let j = a; j < b; j++) {
+    for (let j = a; j < e2; j++) {
       const v = c1 ? (c0[j]+c1[j])*.5 : c0[j];
       const av = v < 0 ? -v : v;
       if (av > m) m = av;
     }
-    peaks[i] = m;
+    out[i] = m;
   }
+  return out;
 }
+
+function rebuildPeaks() { if (buf) peaks = makePeaks(buf); }
 
 function trimX() {
   if (!buf) return [0,0];
@@ -1583,7 +2091,7 @@ function readMx() {
 
   const manual = P.target === 0;
   mxEls.drive.disabled = !manual;
-  $('vDrive').textContent = manual ? '+' + P.drive.toFixed(1) + ' dB' : 'auto';
+  $('vDrive').textContent = manual ? '+' + P.drive.toFixed(1) + ' dB' : 'อัตโนมัติ';
   $('vRel').textContent = P.rel + ' ms';
   $('vLa').textContent = P.la.toFixed(1) + ' ms';
 }
@@ -1759,8 +2267,75 @@ document.addEventListener('keydown', ev => {
 let rt;
 window.addEventListener('resize', () => {
   clearTimeout(rt);
-  rt = setTimeout(() => { if (buf) { buildPeaks(); draw(); startMeters(); } }, 130);
+  rt = setTimeout(() => { if (buf) { rebuildPeaks(); draw(); startMeters(); } }, 130);
 });
+
+/* ══════════ INTRO MENU ══════════ */
+/* ══════════ MENU PARTICLES ══════════ */
+(function particles() {
+  const cv = $('mcanvas');
+  if (!cv) return;
+  const cx = cv.getContext('2d');
+  const COLORS = ['139,92,246','34,211,238','236,72,153','52,211,153'];
+  let W = 0, H = 0, ps = [], alive = true;
+
+  function resize() {
+    W = cv.clientWidth; H = cv.clientHeight;
+    if (!W || !H) return;
+    cv.width = W*2; cv.height = H*2;
+    cx.setTransform(2, 0, 0, 2, 0, 0);
+    const N = Math.min(85, Math.max(28, Math.round(W*H/17000)));
+    ps = Array.from({ length: N }, () => ({
+      x: Math.random()*W, y: Math.random()*H,
+      r: 0.6 + Math.random()*2.1,
+      vx: (Math.random()-.5)*0.2,
+      vy: -0.1 - Math.random()*0.45,
+      a: 0.1 + Math.random()*0.5,
+      c: COLORS[(Math.random()*COLORS.length)|0]
+    }));
+  }
+
+  function frame() {
+    if (!alive) return;
+    cx.clearRect(0, 0, W, H);
+    for (const p of ps) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -12) { p.y = H + 12; p.x = Math.random()*W; }
+      if (p.x < -12) p.x = W + 12; else if (p.x > W + 12) p.x = -12;
+      cx.beginPath();
+      cx.arc(p.x, p.y, p.r, 0, 7);
+      cx.fillStyle = 'rgba(' + p.c + ',' + p.a + ')';
+      cx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(frame);
+  document.addEventListener('aura:entered', () => { alive = false; });
+})();
+
+(function buildMenuBars() {
+  const box = $('mbars');
+  if (!box) return;
+  const N = 56;
+  let html = '';
+  for (let i = 0; i < N; i++) {
+    const d = (Math.random() * 1.1).toFixed(2);
+    const dur = (0.75 + Math.random() * 0.9).toFixed(2);
+    const h = 0.35 + Math.random() * 0.65;
+    html += `<i style="animation-delay:-${d}s;animation-duration:${dur}s;height:${(h*58)|0}px"></i>`;
+  }
+  box.innerHTML = html;
+})();
+
+$('enterBtn').onclick = () => {
+  const m = $('menu');
+  m.classList.add('gone');
+  document.dispatchEvent(new Event('aura:entered'));
+  setTimeout(() => { m.style.display = 'none'; }, 720);
+};
 
 /* ══════════ INIT ══════════ */
 readUI();
