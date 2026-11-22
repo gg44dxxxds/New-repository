@@ -2276,11 +2276,19 @@ $('qSel').onchange = () => {
 };
 
 /* ══════════ ENCODERS ══════════ */
+const ENC_CDN = [
+  'https://esm.sh/wasm-media-encoders@0.7.0',
+  'https://cdn.jsdelivr.net/npm/wasm-media-encoders@0.7.0/+esm',
+];
 async function encs() {
   if (encMod) return encMod;
-  try { encMod = await import('https://esm.sh/wasm-media-encoders@0.7.0'); }
-  catch { throw new Error('โหลด encoder ไม่ได้ — ต้องต่อเน็ตครั้งแรก'); }
-  return encMod;
+  let last = null;
+  for (const u of ENC_CDN) {
+    try { encMod = await import(u); return encMod; }
+    catch (e) { last = e; }
+  }
+  console.warn('encoder load failed:', last);
+  throw new Error('โหลด encoder ไม่ได้ — ต้องต่อเน็ตครั้งแรก');
 }
 async function toMp3(b, kbps, cb) {
   const { createMp3Encoder } = await encs();
